@@ -7,33 +7,33 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <style>
-:root{--navy:#17365d;--blue:#2364aa;--gold:#e6b84a;--bg:#f3f6fa;--line:#dce3ec;--text:#182230;--muted:#667085;--green:#16865b;--red:#c0392b}
+:root{--navy:#6b1d2f;--blue:#8a253c;--gold:#e6b84a;--bg:#f8f4f5;--line:#e5d4d8;--text:#182230;--muted:#667085;--green:#16865b;--red:#c0392b}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:Arial,Helvetica,sans-serif;color:var(--text)}
-header{background:linear-gradient(110deg,#142d4e,#2364aa);color:white;padding:16px 22px;display:flex;align-items:center;gap:14px;box-shadow:0 3px 14px #10243b30}
-header img{width:58px;height:58px;object-fit:contain;border-radius:10px;background:white;padding:3px}header h1{font-size:22px;margin:0}header p{margin:4px 0 0;color:#e8eef8;font-size:13px}
+header{background:linear-gradient(110deg,#4d1421,#6b1d2f);color:white;padding:16px 22px;display:flex;align-items:center;gap:14px;box-shadow:0 3px 14px #6b1d2f30}
+header img{width:58px;height:58px;object-fit:contain;border-radius:10px;background:white;padding:3px}header h1{font-size:22px;margin:0}header p{margin:4px 0 0;color:#f3e3e6;font-size:13px}
 .wrap{max-width:1178px;width:100%;margin:16px auto;padding:0 12px}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
 button,.tab{border:0;border-radius:9px;padding:11px 16px;background:var(--blue);color:#fff;font-weight:700;cursor:pointer}
 button.secondary,.tab{background:#fff;color:var(--navy);border:1px solid var(--line)}button.danger{background:var(--red)}button:disabled{opacity:.45;cursor:not-allowed}
-.tab.active{background:var(--navy);color:#fff}.panel{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:0 5px 20px #1c355010;margin-bottom:16px}
+.tab.active{background:var(--navy);color:#fff}.panel{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:0 5px 20px #6b1d2f10;margin-bottom:16px}
 h2{font-size:19px;margin:0 0 15px;color:var(--navy)}.row{display:flex;gap:12px;align-items:end;flex-wrap:wrap}.field{display:flex;flex-direction:column;gap:6px;min-width:150px;flex:1}
 .field.hospital-field{flex:2.2;min-width:240px}
 .field.date-field{flex:0.8;max-width:190px;min-width:140px}
 label{font-size:12px;color:var(--muted);font-weight:700}
 input,select{padding:11px 12px;border:1px solid #cfd8e3;border-radius:8px;font-size:16px;min-width:0;background:white;color:var(--text)}
 #hospitalSearch{font-size:20.5px;font-weight:700;color:var(--navy)}
-input:focus,select:focus{outline:2px solid #8db9ec;border-color:var(--blue)}.date-big{font-size:16px;font-weight:700;color:var(--navy)}
-table{width:100%;border-collapse:collapse;table-layout:fixed}th{background:#eaf0f7;color:#17365d;font-size:13px;text-align:left;padding:11px;border:1px solid var(--line)}td{padding:5px 8px;border:1px solid var(--line)}tbody tr:nth-child(odd){background:#f1f6fc}tbody tr:nth-child(even){background:#ffffff}tbody tr:hover{background:#e5effb}td input{width:112px;max-width:100%;text-align:center;font-size:18px;font-weight:700;padding:6px 5px;margin:0 auto;display:block}
+input:focus,select:focus{outline:2px solid #d493a3;border-color:var(--blue)}.date-big{font-size:16px;font-weight:700;color:var(--navy)}
+table{width:100%;border-collapse:collapse;table-layout:fixed}th{background:#f4ecee;color:#6b1d2f;font-size:13px;text-align:left;padding:11px;border:1px solid var(--line)}td{padding:5px 8px;border:1px solid var(--line)}tbody tr:nth-child(odd){background:#fcf8f8}tbody tr:nth-child(even){background:#ffffff}tbody tr:hover{background:#f7eef0}td input{width:112px;max-width:100%;text-align:center;font-size:18px;font-weight:700;padding:6px 5px;margin:0 auto;display:block}
 .item-name{font-weight:700;font-size:14px;padding-left:10px}.total{font-weight:800;color:var(--navy);font-size:17px;text-align:center}.muted{color:var(--muted);font-size:13px}.status{font-weight:700}.open{color:var(--green)}.closed{color:var(--red)}
 .log-table td{font-size:13px}.hidden{display:none!important}.notice{padding:11px 13px;background:#fff8e6;border:1px solid #f1d58b;border-radius:8px;color:#72520a;margin:10px 0;font-size:13px}
-footer{text-align:center;color:#64748b;font-size:12px;padding:18px}.signature-card{position:fixed;bottom:14px;left:14px;background:#fff;color:#1554a0;border:1.5px solid #c62828;border-radius:7px;padding:7px 11px;box-shadow:0 5px 16px #0002;z-index:10;text-decoration:none;font-size:10px;font-weight:700;animation:float 6s ease-in-out infinite}
+footer{text-align:center;color:#64748b;font-size:12px;padding:18px}.signature-card{position:fixed;bottom:14px;left:14px;background:#fff;color:#6b1d2f;border:1.5px solid #6b1d2f;border-radius:7px;padding:7px 11px;box-shadow:0 5px 16px #0002;z-index:10;text-decoration:none;font-size:10px;font-weight:700;animation:float 6s ease-in-out infinite}
 .signature-card .sub{font-size:9px;font-weight:500}@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
 .qty:disabled{background:#f2f4f7;color:#667085}
 .order-tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:0 0 12px}
 
 .autocomplete-wrap{position:relative}
-.suggestions{position:absolute;z-index:30;left:0;right:0;top:100%;background:#fffdf6;border:2px solid var(--gold);border-radius:8px;max-height:240px;overflow:auto;box-shadow:0 8px 24px rgba(23,54,93,0.2)}
+.suggestions{position:absolute;z-index:30;left:0;right:0;top:100%;background:#fffdf6;border:2px solid var(--gold);border-radius:8px;max-height:240px;overflow:auto;box-shadow:0 8px 24px rgba(107,29,47,0.2)}
 .suggestions button{display:block;width:100%;text-align:left;border-radius:0;background:#fffdf6;color:var(--navy);font-weight:700;padding:12px 14px;border-bottom:1px solid #f2e3b8;font-size:15px}
-.suggestions button:hover{background:#fbe9b7;color:#10243b}
+.suggestions button:hover{background:#fbe9b7;color:#4d1421}
 
 @media(max-width:768px){
   header h1{font-size:18px}.panel{padding:12px}.table-scroll{overflow-x:auto}
@@ -241,6 +241,7 @@ async function loadSummary(){
 async function searchHistory(){
  const hosp=$("historyHospital").value.trim(),fromDate=$("historyFromDate").value,toDate=$("historyDate").value;
  let snaps=await getDocs(collection(firestore,"orders"));
+ // الترتيب من الأحدث فوق إلى الأقدم تحت
  let rows=snaps.docs.map(d=>({id:d.id,...d.data()})).filter(o=>(!hosp||o.hospital===hosp)&&(!fromDate||o.date>=fromDate)&&(!toDate||o.date<=toDate)).sort((a,b)=>b.date.localeCompare(a.date));
  $("historyResults").innerHTML=`<table><thead><tr><th>Date</th><th>Hospital</th><th>Items</th><th>Last Update</th><th>Action</th></tr></thead><tbody>${rows.map(o=>`<tr><td>${safe(o.date)}</td><td>${safe(o.hospital)}</td><td>${Object.keys(o.quantities||{}).length}</td><td>${o.updatedAt?.toDate?o.updatedAt.toDate().toLocaleString():""}</td><td><button class="secondary" data-open="${safe(o.id)}">Open</button></td></tr>`).join("")}</tbody></table>`;
  $("historyResults").querySelectorAll("[data-open]").forEach(b=>b.onclick=async()=>{
@@ -279,12 +280,13 @@ async function exportSummaryPdf(){
  const orders=snap.docs.map(d=>d.data());
  const {jsPDF}=window.jspdf;
  
+ // ضبط الملف ليكون بصيغة أفقية (Landscape) ليناسب عرض جميع المستشفيات في صفحة واحدة
  const pdf=new jsPDF({orientation:"landscape",unit:"pt",format:"a4"});
  const pageWidth = pdf.internal.pageSize.getWidth();
  
  pdf.setFont("helvetica","bold");
- pdf.setFontSize(10);
- pdf.text(`FONDANT CHOCO — DAILY HOSPITAL ORDERS | Date: ${date} | Total Hospitals: ${hospitals.length}`, pageWidth / 2, 18, {align:"center"});
+ pdf.setFontSize(9.5);
+ pdf.text(`FONDANT CHOCO — DAILY HOSPITAL ORDERS | Date: ${date} | Total Hospitals: ${hospitals.length}`, pageWidth / 2, 16, {align:"center"});
  
  const head=[["Item",...hospitals,"Total"]];
  const body=items.map(item=>{
@@ -298,43 +300,44 @@ async function exportSummaryPdf(){
   return [item,...vals,sum?String(sum):""];
  });
 
- const availableWidth = pageWidth - 20;
- const col0Width = 140;
- const totalColWidth = 42;
+ // حسابات دقيقة لعرض الأعمدة حتى لا ينقسم الجدول إلى صفحات متعددة
+ const availableWidth = pageWidth - 16; // هوامش 8 من الجانبين
+ const col0Width = 135; 
+ const totalColWidth = 38;
  const remainingWidth = availableWidth - col0Width - totalColWidth;
  const hospitalColWidth = remainingWidth / hospitals.length;
 
  const colStyles = {
   0: { cellWidth: col0Width, halign: "left", fontStyle: "bold" },
-  [hospitals.length + 1]: { cellWidth: totalColWidth, fontStyle: "bold", fillColor: [232, 240, 248] }
+  [hospitals.length + 1]: { cellWidth: totalColWidth, fontStyle: "bold", fillColor: [240, 230, 233] }
  };
  hospitals.forEach((_, idx) => { colStyles[idx + 1] = { cellWidth: hospitalColWidth, halign: "center" }; });
 
  pdf.autoTable({
   head,
   body,
-  startY: 25,
-  margin: { top: 20, left: 10, right: 10, bottom: 10 },
+  startY: 22,
+  margin: { top: 18, left: 8, right: 8, bottom: 8 },
   theme: "grid",
   styles: {
    font: "helvetica",
-   fontSize: 8.5,
-   cellPadding: 2.5,
+   fontSize: 8.2,
+   cellPadding: 2,
    halign: "center",
    valign: "middle",
-   lineColor: [205, 215, 228],
-   lineWidth: 0.3
+   lineColor: [220, 205, 209],
+   lineWidth: 0.25
   },
   headStyles: {
-   fillColor: [23, 54, 93],
+   fillColor: [107, 29, 47], // لون عنابي غامق متوافق مع الشعار
    textColor: 255,
    fontStyle: "bold",
-   fontSize: 7,
+   fontSize: 6.8,
    cellPadding: 1,
-   minCellHeight: 65
+   minCellHeight: 55 // تقليل ارتفاع رأس الجدول ليضمن احتواء كل شيء في صفحة واحدة
   },
   columnStyles: colStyles,
-  alternateRowStyles: { fillColor: [244, 248, 252] },
+  alternateRowStyles: { fillColor: [252, 248, 249] },
   didParseCell: function(data) {
    if (data.section === 'head' && data.column.index > 0 && data.column.index <= hospitals.length) {
     data.cell.styles.valign = 'bottom';
@@ -342,20 +345,20 @@ async function exportSummaryPdf(){
   },
   customDrawCell: function(data) {
    if (data.section === 'head' && data.column.index > 0 && data.column.index <= hospitals.length) {
-    pdf.setFillColor(23, 54, 93);
+    pdf.setFillColor(107, 29, 47);
     pdf.rect(data.cell.x, data.cell.y, data.cell.width, data.cell.height, 'F');
-    pdf.setDrawColor(205, 215, 228);
-    pdf.setLineWidth(0.3);
+    pdf.setDrawColor(220, 205, 209);
+    pdf.setLineWidth(0.25);
     pdf.rect(data.cell.x, data.cell.y, data.cell.width, data.cell.height, 'S');
 
     pdf.saveGraphicsState();
     pdf.setTextColor(255, 255, 255);
     pdf.setFont("helvetica", "bold");
-    pdf.setFontSize(7);
+    pdf.setFontSize(6.8);
 
     const text = data.cell.text.join(' ');
-    const x = data.cell.x + (data.cell.width / 2) + 2.5;
-    const y = data.cell.y + data.cell.height - 4;
+    const x = data.cell.x + (data.cell.width / 2) + 2;
+    const y = data.cell.y + data.cell.height - 3;
 
     pdf.text(text, x, y, { angle: 90 });
     pdf.restoreGraphicsState();
@@ -430,9 +433,9 @@ $("clearFormTop").onclick=()=>$("clearForm").click();
 $("orderDate").value=tomorrow();
 $("summaryDate").value=tomorrow();
 
-// تعيين الفترة الافتراضية لشاشة السجل (من أول أمس حتى اليوم)
-$("historyFromDate").value=addDays(todayLocal(),-2);
-$("historyDate").value=todayLocal();
+// تعيين الفترة الافتراضية لشاشة History لتكون من تاريخ أمس حتى تاريخ الغد
+$("historyFromDate").value=addDays(todayLocal(),-1);
+$("historyDate").value=tomorrow();
 
 $("printDate").textContent="Order Date: "+tomorrow();
 
