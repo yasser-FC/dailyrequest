@@ -11,7 +11,7 @@
 *{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:Arial,Helvetica,sans-serif;color:var(--text)}
 header{background:linear-gradient(110deg,#142d4e,#2364aa);color:white;padding:16px 22px;display:flex;align-items:center;gap:14px;box-shadow:0 3px 14px #10243b30}
 header img{width:58px;height:58px;object-fit:contain;border-radius:10px;background:white;padding:3px}header h1{font-size:22px;margin:0}header p{margin:4px 0 0;color:#e8eef8;font-size:13px}
-.wrap{max-width:1240px;width:100%;margin:16px auto;padding:0 12px}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.wrap{max-width:1178px;width:100%;margin:16px auto;padding:0 12px}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
 button,.tab{border:0;border-radius:9px;padding:11px 16px;background:var(--blue);color:#fff;font-weight:700;cursor:pointer}
 button.secondary,.tab{background:#fff;color:var(--navy);border:1px solid var(--line)}button.danger{background:var(--red)}button:disabled{opacity:.45;cursor:not-allowed}
 .tab.active{background:var(--navy);color:#fff}.panel{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:0 5px 20px #1c355010;margin-bottom:16px}
@@ -20,7 +20,7 @@ h2{font-size:19px;margin:0 0 15px;color:var(--navy)}.row{display:flex;gap:12px;a
 .field.date-field{flex:0.8;max-width:190px;min-width:140px}
 label{font-size:12px;color:var(--muted);font-weight:700}
 input,select{padding:11px 12px;border:1px solid #cfd8e3;border-radius:8px;font-size:16px;min-width:0;background:white;color:var(--text)}
-#hospitalSearch{font-size:18.5px;font-weight:700;color:var(--navy)}
+#hospitalSearch{font-size:20.5px;font-weight:700;color:var(--navy)}
 input:focus,select:focus{outline:2px solid #8db9ec;border-color:var(--blue)}.date-big{font-size:16px;font-weight:700;color:var(--navy)}
 table{width:100%;border-collapse:collapse;table-layout:fixed}th{background:#eaf0f7;color:#17365d;font-size:13px;text-align:left;padding:11px;border:1px solid var(--line)}td{padding:5px 8px;border:1px solid var(--line)}tbody tr:nth-child(odd){background:#f1f6fc}tbody tr:nth-child(even){background:#ffffff}tbody tr:hover{background:#e5effb}td input{width:112px;max-width:100%;text-align:center;font-size:18px;font-weight:700;padding:6px 5px;margin:0 auto;display:block}
 .item-name{font-weight:700;font-size:14px;padding-left:10px}.total{font-weight:800;color:var(--navy);font-size:17px;text-align:center}.muted{color:var(--muted);font-size:13px}.status{font-weight:700}.open{color:var(--green)}.closed{color:var(--red)}
@@ -30,7 +30,6 @@ footer{text-align:center;color:#64748b;font-size:12px;padding:18px}.signature-ca
 .qty:disabled{background:#f2f4f7;color:#667085}
 .order-tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:0 0 12px}
 
-/* تلوين وتمييز قائمة اقتراحات المستشفيات */
 .autocomplete-wrap{position:relative}
 .suggestions{position:absolute;z-index:30;left:0;right:0;top:100%;background:#fffdf6;border:2px solid var(--gold);border-radius:8px;max-height:240px;overflow:auto;box-shadow:0 8px 24px rgba(23,54,93,0.2)}
 .suggestions button{display:block;width:100%;text-align:left;border-radius:0;background:#fffdf6;color:var(--navy);font-weight:700;padding:12px 14px;border-bottom:1px solid #f2e3b8;font-size:15px}
@@ -68,7 +67,6 @@ footer{text-align:center;color:#64748b;font-size:12px;padding:18px}.signature-ca
    <div class="print-title"><h2>FONDANT CHOCO — DAILY HOSPITAL ORDERS</h2><p id="printDate"></p></div>
    <div class="row no-print" style="justify-content:space-between;margin-bottom:10px">
      <h2 style="margin:0">Order Items</h2>
-     <!-- مربع البحث بالحرف عن اسم الصنف -->
      <div class="field" style="max-width:280px;margin:0;"><input id="itemSearchInput" type="text" placeholder="🔍 Search item by letter..." style="padding:7px 10px;font-size:14px"></div>
      <div class="muted" id="saveState">Not saved</div>
    </div>
@@ -81,7 +79,18 @@ footer{text-align:center;color:#64748b;font-size:12px;padding:18px}.signature-ca
   <div class="panel no-print"><h2>Daily Consolidated Summary</h2><div class="row"><div class="field"><label>Order Date</label><input id="summaryDate" type="date"></div><button id="refreshSummary">Load Summary</button><button id="exportPdf">Preview & Download PDF</button><button class="secondary" id="printSummary">Print</button></div></div>
   <div class="panel"><div class="print-title"><h2>FONDANT CHOCO — DAILY HOSPITAL ORDERS</h2><p id="summaryPrintDate"></p></div><div id="summaryContent" class="table-scroll"><p class="muted">Choose a date and load the consolidated report.</p></div></div>
  </section>
- <section id="history" class="section hidden"><div class="panel"><h2>Recent Orders</h2><div class="row no-print"><div class="field"><label>Order Date (default: yesterday)</label><input id="historyDate" type="date"></div><div class="field"><label>Hospital</label><input id="historyHospital" placeholder="All hospitals"></div><button id="searchHistory">Search</button></div><div id="historyResults" class="table-scroll"></div></div></section>
+ <section id="history" class="section hidden">
+  <div class="panel">
+    <h2>Recent Orders</h2>
+    <div class="row no-print">
+      <div class="field"><label>From Date</label><input id="historyFromDate" type="date"></div>
+      <div class="field"><label>To Date</label><input id="historyDate" type="date"></div>
+      <div class="field"><label>Hospital</label><input id="historyHospital" placeholder="All hospitals"></div>
+      <button id="searchHistory">Search</button>
+    </div>
+    <div id="historyResults" class="table-scroll"></div>
+  </div>
+</section>
  <section id="activity" class="section hidden"><div class="panel"><h2>Activity Log</h2><div class="row no-print"><div class="field"><label>From Date</label><input id="logFrom" type="date"></div><div class="field"><label>To Date</label><input id="logTo" type="date"></div><div class="field"><label>Hospital</label><input id="logHospital" list="hospitalList" placeholder="All hospitals"></div><button id="searchLogs">Refresh Log</button></div><div class="row no-print" style="margin:12px 0"><button class="danger" id="deleteLogs">Delete Selected Log Records</button><span class="muted">Deletion password required.</span></div><div id="logResults" class="table-scroll"></div></div></section>
  <section id="master" class="section hidden">
   <div class="panel"><h2>Hospitals Management</h2><div class="row no-print"><div class="field"><label>New Hospital Name</label><input id="newHospital" placeholder="Hospital name"></div><button id="addHospital">Add Hospital</button></div><div id="hospitalManage"></div></div>
@@ -129,7 +138,6 @@ function showHospitalSuggestions(){
  box.querySelectorAll("button").forEach(b=>b.onclick=()=>{$("hospitalSearch").value=b.dataset.hospital;box.classList.add("hidden");loadOrder().catch(e=>alert(e.message));});
 }
 
-// عرض الأصناف وتطبيق التصفية بحسب البحث
 function renderRows(values={}){
  const query = ($("itemSearchInput")?$("itemSearchInput").value:"").trim().toLowerCase();
  $("orderRows").innerHTML=items.map((item)=>{
@@ -179,7 +187,6 @@ async function loadOrder(){
  $("lockNotice").classList.toggle("hidden",isEditable(date));
 }
 
-// مسح حقل المستشفى وشاشة الإدخال بعد الحفظ
 async function saveOrder(){
  const hospital=selectedHospital(),date=$("orderDate").value;
  if(!hospital){alert("Please select a hospital.");return}
@@ -192,7 +199,6 @@ async function saveOrder(){
  status("Saved successfully");
  alert("Order saved successfully.");
  
- // مسح البيانات والشاشة تلقائياً
  $("hospitalSearch").value = "";
  if($("itemSearchInput")) $("itemSearchInput").value = "";
  renderRows();
@@ -233,9 +239,9 @@ async function loadSummary(){
 }
 
 async function searchHistory(){
- const hosp=$("historyHospital").value.trim(),date=$("historyDate").value;
+ const hosp=$("historyHospital").value.trim(),fromDate=$("historyFromDate").value,toDate=$("historyDate").value;
  let snaps=await getDocs(collection(firestore,"orders"));
- let rows=snaps.docs.map(d=>({id:d.id,...d.data()})).filter(o=>(!hosp||o.hospital===hosp)&&(!date||o.date===date)).sort((a,b)=>a.hospital.localeCompare(b.hospital));
+ let rows=snaps.docs.map(d=>({id:d.id,...d.data()})).filter(o=>(!hosp||o.hospital===hosp)&&(!fromDate||o.date>=fromDate)&&(!toDate||o.date<=toDate)).sort((a,b)=>b.date.localeCompare(a.date));
  $("historyResults").innerHTML=`<table><thead><tr><th>Date</th><th>Hospital</th><th>Items</th><th>Last Update</th><th>Action</th></tr></thead><tbody>${rows.map(o=>`<tr><td>${safe(o.date)}</td><td>${safe(o.hospital)}</td><td>${Object.keys(o.quantities||{}).length}</td><td>${o.updatedAt?.toDate?o.updatedAt.toDate().toLocaleString():""}</td><td><button class="secondary" data-open="${safe(o.id)}">Open</button></td></tr>`).join("")}</tbody></table>`;
  $("historyResults").querySelectorAll("[data-open]").forEach(b=>b.onclick=async()=>{
   const o=rows.find(x=>x.id===b.dataset.open);
@@ -254,7 +260,6 @@ async function searchLogs(){
  const all=$("selectAllLogs");if(all)all.onchange=()=>document.querySelectorAll(".log-check").forEach(c=>c.checked=all.checked);
 }
 
-// مسح السجلات بدون تسجيل حركة الحذف ضمن السجل
 async function deleteLogs(){
  const ids=[...document.querySelectorAll(".log-check:checked")].map(x=>x.value);
  if(!ids.length){alert("Select at least one record.");return}
@@ -314,7 +319,7 @@ async function exportSummaryPdf(){
   styles: {
    font: "helvetica",
    fontSize: 8.5,
-   cellPadding: 2.5,  // تقليل حشوة الخلية لتقليل الارتفاع الإجمالي
+   cellPadding: 2.5,
    halign: "center",
    valign: "middle",
    lineColor: [205, 215, 228],
@@ -326,7 +331,7 @@ async function exportSummaryPdf(){
    fontStyle: "bold",
    fontSize: 7,
    cellPadding: 1,
-   minCellHeight: 65 // تقليل ارتفاع رأس الجدول لمنع الانقسام لصفحتين
+   minCellHeight: 65
   },
   columnStyles: colStyles,
   alternateRowStyles: { fillColor: [244, 248, 252] },
@@ -406,6 +411,7 @@ function showTab(id){
  document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===id));
  if(id==="master")renderMaster();
  if(id==="activity")searchLogs().catch(console.error);
+ if(id==="history")searchHistory().catch(console.error);
 }
 
 document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
@@ -423,7 +429,11 @@ $("clearFormTop").onclick=()=>$("clearForm").click();
 
 $("orderDate").value=tomorrow();
 $("summaryDate").value=tomorrow();
-$("historyDate").value=addDays(todayLocal(),-1);
+
+// تعيين الفترة الافتراضية لشاشة السجل (من أول أمس حتى اليوم)
+$("historyFromDate").value=addDays(todayLocal(),-2);
+$("historyDate").value=todayLocal();
+
 $("printDate").textContent="Order Date: "+tomorrow();
 
 renderRows();
@@ -453,6 +463,7 @@ async function start(){
  if(!firestore)throw new Error("Firestore was not initialized.");
  await getMaster();
  await logAction("Program Login","Session started without Auth","Not selected");
+ searchHistory().catch(console.error);
 }
 
 start().catch(e=>{console.error(e);alert("Firebase connection error: "+(e.code||e.message));status("Firebase connection error")});
