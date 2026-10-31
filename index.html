@@ -4,7 +4,9 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Fondant Choco | Hospital Orders</title>
 <link rel="icon" href="https://i.postimg.cc/WbJw6TdV/Orig-LOGO-Square.jpg">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>\n<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>\n<style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<style>
 :root{--navy:#17365d;--blue:#2364aa;--gold:#e6b84a;--bg:#f3f6fa;--line:#dce3ec;--text:#182230;--muted:#667085;--green:#16865b;--red:#c0392b}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:Arial,Helvetica,sans-serif;color:var(--text)}
 header{background:linear-gradient(110deg,#142d4e,#2364aa);color:white;padding:16px 22px;display:flex;align-items:center;gap:14px;box-shadow:0 3px 14px #10243b30}
@@ -25,7 +27,6 @@ footer{text-align:center;color:#64748b;font-size:12px;padding:18px}.signature-ca
 @media(max-width:700px){header h1{font-size:18px}.panel{padding:12px}.table-scroll{overflow-x:auto}table{min-width:0}.field{min-width:145px}}
 @media print{body{background:white}.no-print,header,.tabs,footer,.signature-card{display:none!important}.wrap{max-width:none;margin:0;padding:0}.panel{box-shadow:none;border:0;padding:0}.print-title{display:block!important}table{font-size:10px}th,td{padding:5px}td input{border:0;font-size:14px}.page-break{break-before:page}}
 .print-title{display:none}
-
 .qty:disabled{background:#f2f4f7;color:#667085}
 .order-tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:0 0 12px}
 .autocomplete-wrap{position:relative}.suggestions{position:absolute;z-index:30;left:0;right:0;top:100%;background:#fff;border:1px solid #cfd8e3;border-radius:8px;max-height:220px;overflow:auto;box-shadow:0 8px 20px #0002}.suggestions button{display:block;width:100%;text-align:left;border-radius:0;background:#fff;color:#182230;border-bottom:1px solid #eef1f5}.suggestions button:hover{background:#eaf2fb}
@@ -76,21 +77,23 @@ footer{text-align:center;color:#64748b;font-size:12px;padding:18px}.signature-ca
 <a class="signature-card" href="https://yasser-q8.github.io/myprofile/#" target="_blank" rel="noopener"><div>Yasser Elkhateeb</div><div class="sub">Program Developer · 67011143</div></a>
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import {getAuth,signInAnonymously,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import {getFirestore,collection,doc,getDoc,getDocs,setDoc,addDoc,deleteDoc,query,where,orderBy,serverTimestamp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import {getFirestore,collection,doc,getDoc,getDocs,setDoc,addDoc,deleteDoc,query,where,serverTimestamp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-/* Paste your Firebase web configuration below. */
 const firebaseConfig={
  apiKey:"AIzaSyAIKt2pRi-fh1KljVKZ83aJmPOCFsaj2pk",
  authDomain:"dailyrequest-4865e.firebaseapp.com",
  projectId:"dailyrequest-4865e",
- storageBucket:"dailyrequest-4865e.appspot.com",
+ storageBucket:"dailyrequest-4865e.firebasestorage.app",
  messagingSenderId:"176708576834",
  appId:"1:176708576834:web:fb73a5002b95f4c4aaafdb"
 };
+
 const DEFAULT_HOSPITALS=["Al-Adan Hospital","Al-Jahra Hospital","Al-Razi Hospital","Hya Elhabib Hospital","Hisham Al-Sager Hospital","Hamed Al-Eissa Hospital","NBK Hospital","Physiology Hospital","Higher Institute of Energy - HIE","College of Health Sciences - Boys","College of Technological Studies - Girls","New Al-Razi Hospital","Addiction Treatment Center - ATC","Ministry of Health","Al Omooma Hospital"];
 const DEFAULT_ITEMS=["Sweet Graham","Halloum Croll Sandwich","Turkey Croll Sandwich","Chicken Croll Sandwich","Mix Fried Sandwich","Feta Sandwich","Halloum Brown Sandwich","Turkish Brown Sandwich With Sesame","Brown Chicken Sandwich With Sesame","Halloum Sandwich","Turkey Sandwich","Chicken Sandwich","Chicken Saj","Halloum Saj","Grape Leaves Lemon","Grape Leaves Roman","Mohalabiya","Brownies Cups","Saffron Cake","Tiramisu Cheesecake","Chocolate Box","Strawberry Cheesecake","Chocolate Cheesecake","Nutella Kinder","Dulcie Kinder","Crystal Baby","Regular Crystal","Wood Baby"];
-const $=id=>document.getElementById(id);let firestore,auth,user=null,hospitals=[...DEFAULT_HOSPITALS],items=[...DEFAULT_ITEMS],activeLogIds=[];
+
+const $=id=>document.getElementById(id);
+let firestore,hospitals=[...DEFAULT_HOSPITALS],items=[...DEFAULT_ITEMS],activeLogIds=[];
+
 const todayLocal=()=>{const d=new Date();return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10)};
 const addDays=(s,n)=>{const d=new Date(s+"T12:00:00");d.setDate(d.getDate()+n);return d.toISOString().slice(0,10)};
 const tomorrow=()=>addDays(todayLocal(),1);
@@ -101,6 +104,7 @@ function status(msg){$("saveState").textContent=msg}
 function selectedHospital(){return $("hospitalSearch").value.trim()}
 function orderKey(date,hospital){return date+"__"+hospital}
 function setOptions(){ $("hospitalList").innerHTML=hospitals.map(x=>`<option value="${safe(x)}">`).join(""); }
+
 function showHospitalSuggestions(){
  const q=$("hospitalSearch").value.trim().toLowerCase(),box=$("hospitalSuggestions");
  const matches=hospitals.filter(h=>!q||h.toLowerCase().includes(q)).slice(0,30);
@@ -108,18 +112,38 @@ function showHospitalSuggestions(){
  box.classList.toggle("hidden",!matches.length);
  box.querySelectorAll("button").forEach(b=>b.onclick=()=>{$("hospitalSearch").value=b.dataset.hospital;box.classList.add("hidden");loadOrder().catch(e=>alert(e.message));});
 }
-function renderRows(values={}){$("orderRows").innerHTML=items.map((item,i)=>`<tr><td class="item-name">${safe(item)}</td><td><input class="qty" data-item="${safe(item)}" type="text" inputmode="decimal" autocomplete="off" value="${values[item]??""}" placeholder=""></td></tr>`).join("");document.querySelectorAll(".qty").forEach((el,i)=>{el.addEventListener("keydown",e=>{if(["ArrowDown","ArrowUp","Enter"].includes(e.key)){e.preventDefault();const a=[...document.querySelectorAll(".qty")];const next=e.key==="ArrowUp"?i-1:i+1;if(a[next]){a[next].focus();a[next].select();}}else if(e.key==="ArrowRight"||e.key==="ArrowLeft"){e.preventDefault();}});el.addEventListener("input",()=>{el.value=el.value.replace(/[^0-9.]/g,"").replace(/(\\..*)\\./g,"$1")})})}
+
+function renderRows(values={}){
+ $("orderRows").innerHTML=items.map((item)=>`<tr><td class="item-name">${safe(item)}</td><td><input class="qty" data-item="${safe(item)}" type="text" inputmode="decimal" autocomplete="off" value="${values[item]??""}" placeholder=""></td></tr>`).join("");
+ document.querySelectorAll(".qty").forEach((el,i)=>{
+  el.addEventListener("keydown",e=>{
+   if(["ArrowDown","ArrowUp","Enter"].includes(e.key)){
+    e.preventDefault();const a=[...document.querySelectorAll(".qty")];const next=e.key==="ArrowUp"?i-1:i+1;
+    if(a[next]){a[next].focus();a[next].select();}
+   }
+  });
+  el.addEventListener("input",()=>{el.value=el.value.replace(/[^0-9.]/g,"").replace(/(\..*)\./g,"$1")});
+ });
+}
+
 async function logAction(action,details="",hospital=selectedHospital()){
  if(!firestore)return;
- try{await addDoc(collection(firestore,"activityLogs"),{date:todayLocal(),timestamp:serverTimestamp(),time:new Date().toISOString(),hospital:hospital||"Not selected",action,details,device:navigator.userAgent,sessionId:user?.uid||"unknown"});}catch(e){console.error("Activity log error",e)}
+ try{
+  await addDoc(collection(firestore,"activityLogs"),{date:todayLocal(),timestamp:serverTimestamp(),time:new Date().toISOString(),hospital:hospital||"Not selected",action,details,device:navigator.userAgent});
+ }catch(e){console.error("Activity log error",e)}
 }
+
 async function getMaster(){
  const [h,i]=await Promise.all([getDoc(doc(firestore,"settings","hospitals")),getDoc(doc(firestore,"settings","items"))]);
  if(h.exists()&&Array.isArray(h.data().values))hospitals=h.data().values;
  if(i.exists()&&Array.isArray(i.data().values))items=i.data().values;
  setOptions();renderRows();renderMaster();
 }
-async function saveMaster(type,values){await setDoc(doc(firestore,"settings",type),{values,updatedAt:serverTimestamp()});}
+
+async function saveMaster(type,values){
+ await setDoc(doc(firestore,"settings",type),{values,updatedAt:serverTimestamp()});
+}
+
 async function loadOrder(){
  const hospital=selectedHospital(),date=$("orderDate").value;
  if(!hospital){alert("Please select a hospital.");return}
@@ -130,15 +154,28 @@ async function loadOrder(){
  $("orderStatus").className="status "+(isEditable(date)?"open":"closed");
  $("lockNotice").classList.toggle("hidden",isEditable(date));
 }
+
 async function saveOrder(){
  const hospital=selectedHospital(),date=$("orderDate").value;
  if(!hospital){alert("Please select a hospital.");return}
  if(!isEditable(date)){alert("This order is closed for editing.");return}
- const quantities={};document.querySelectorAll(".qty").forEach(x=>{const v=x.value.trim();if(v!==""&&Number(v)!==0)quantities[x.dataset.item]=Number(v)});
- await setDoc(doc(firestore,"orders",orderKey(date,hospital)),{hospital,date,quantities,updatedAt:serverTimestamp(),updatedBy:user?.uid||"anonymous"},{merge:true});
- await logAction("Save Order",`Saved ${Object.keys(quantities).length} item quantities`,hospital);status("Saved successfully");alert("Order saved successfully.");
+ const quantities={};
+ document.querySelectorAll(".qty").forEach(x=>{const v=x.value.trim();if(v!==""&&Number(v)!==0)quantities[x.dataset.item]=Number(v)});
+ await setDoc(doc(firestore,"orders",orderKey(date,hospital)),{hospital,date,quantities,updatedAt:serverTimestamp()},{merge:true});
+ await logAction("Save Order",`Saved ${Object.keys(quantities).length} item quantities`,hospital);
+ status("Saved successfully");
+ alert("Order saved successfully.");
 }
-function updateLock(){const date=$("orderDate").value,open=isEditable(date);$("orderStatus").textContent=open?"Open for editing":"Closed";$("orderStatus").className="status "+(open?"open":"closed");$("lockNotice").classList.toggle("hidden",open);$("saveOrder").disabled=!open;document.querySelectorAll(".qty").forEach(x=>x.disabled=!open)}
+
+function updateLock(){
+ const date=$("orderDate").value,open=isEditable(date);
+ $("orderStatus").textContent=open?"Open for editing":"Closed";
+ $("orderStatus").className="status "+(open?"open":"closed");
+ $("lockNotice").classList.toggle("hidden",open);
+ $("saveOrder").disabled=!open;
+ document.querySelectorAll(".qty").forEach(x=>x.disabled=!open);
+}
+
 async function loadSummary(){
  const date=$("summaryDate").value;if(!date)return;
  const snap=await getDocs(query(collection(firestore,"orders"),where("date","==",date)));
@@ -146,39 +183,68 @@ async function loadSummary(){
  const totals={};items.forEach(i=>totals[i]=0);
  data.forEach(o=>Object.entries(o.quantities||{}).forEach(([k,v])=>totals[k]=(totals[k]||0)+Number(v||0)));
  let html=`<table><thead><tr><th>Item</th>${allHosp.map(h=>`<th>${safe(h)}</th>`).join("")}<th>Total</th></tr></thead><tbody>`;
- items.forEach(item=>{let total=0;html+=`<tr><td class="item-name">${safe(item)}</td>`;allHosp.forEach(h=>{const o=data.find(x=>x.hospital===h);const v=Number(o?.quantities?.[item]||0);total+=v;html+=`<td class="total">${v?fmt(v):""}</td>`});html+=`<td class="total">${total?fmt(total):""}</td></tr>`});
+ items.forEach(item=>{
+  let total=0;
+  html+=`<tr><td class="item-name">${safe(item)}</td>`;
+  allHosp.forEach(h=>{
+   const o=data.find(x=>x.hospital===h);
+   const v=Number(o?.quantities?.[item]||0);
+   total+=v;
+   html+=`<td class="total">${v?fmt(v):""}</td>`;
+  });
+  html+=`<td class="total">${total?fmt(total):""}</td></tr>`;
+ });
  html+=`</tbody><tfoot><tr><th>Orders Received</th>${allHosp.map(h=>`<th>${data.some(o=>o.hospital===h)?"Yes":"No"}</th>`).join("")}<th>${data.length}/${allHosp.length}</th></tr></tfoot></table>`;
- $("summaryContent").innerHTML=html;$("summaryPrintDate").textContent="Order Date: "+date;
+ $("summaryContent").innerHTML=html;
+ $("summaryPrintDate").textContent="Order Date: "+date;
  await logAction("View Daily Summary","Loaded consolidated report", "Administration");
 }
+
 async function searchHistory(){
  const hosp=$("historyHospital").value.trim(),date=$("historyDate").value;
- let snaps=await getDocs(collection(firestore,"orders"));let rows=snaps.docs.map(d=>({id:d.id,...d.data()})).filter(o=>(!hosp||o.hospital===hosp)&&(!date||o.date===date)).sort((a,b)=>a.hospital.localeCompare(b.hospital));
+ let snaps=await getDocs(collection(firestore,"orders"));
+ let rows=snaps.docs.map(d=>({id:d.id,...d.data()})).filter(o=>(!hosp||o.hospital===hosp)&&(!date||o.date===date)).sort((a,b)=>a.hospital.localeCompare(b.hospital));
  $("historyResults").innerHTML=`<table><thead><tr><th>Date</th><th>Hospital</th><th>Items</th><th>Last Update</th><th>Action</th></tr></thead><tbody>${rows.map(o=>`<tr><td>${safe(o.date)}</td><td>${safe(o.hospital)}</td><td>${Object.keys(o.quantities||{}).length}</td><td>${o.updatedAt?.toDate?o.updatedAt.toDate().toLocaleString():""}</td><td><button class="secondary" data-open="${safe(o.id)}">Open</button></td></tr>`).join("")}</tbody></table>`;
- $("historyResults").querySelectorAll("[data-open]").forEach(b=>b.onclick=async()=>{const o=rows.find(x=>x.id===b.dataset.open);$("orderDate").value=o.date;$("hospitalSearch").value=o.hospital;showTab("orders");await loadOrder();});
+ $("historyResults").querySelectorAll("[data-open]").forEach(b=>b.onclick=async()=>{
+  const o=rows.find(x=>x.id===b.dataset.open);
+  $("orderDate").value=o.date;
+  $("hospitalSearch").value=o.hospital;
+  showTab("orders");
+  await loadOrder();
+ });
 }
+
 async function searchLogs(){
  const from=$("logFrom").value,to=$("logTo").value,hosp=$("logHospital").value.trim();
- const snap=await getDocs(collection(firestore,"activityLogs"));let rows=snap.docs.map(d=>({id:d.id,...d.data()})).filter(x=>(!from||x.date>=from)&&(!to||x.date<=to)&&(!hosp||x.hospital===hosp)).sort((a,b)=>(b.time||"").localeCompare(a.time||""));
+ const snap=await getDocs(collection(firestore,"activityLogs"));
+ let rows=snap.docs.map(d=>({id:d.id,...d.data()})).filter(x=>(!from||x.date>=from)&&(!to||x.date<=to)&&(!hosp||x.hospital===hosp)).sort((a,b)=>(b.time||"").localeCompare(a.time||""));
  activeLogIds=rows.map(x=>x.id);
- $("logResults").innerHTML=`<table class="log-table"><thead><tr><th><input type="checkbox" id="selectAllLogs"></th><th>Date / Time</th><th>Hospital</th><th>Action</th><th>Description</th><th>Device / Session</th></tr></thead><tbody>${rows.map(x=>`<tr><td><input type="checkbox" class="log-check" value="${safe(x.id)}"></td><td>${safe(x.time||"")}</td><td>${safe(x.hospital)}</td><td>${safe(x.action)}</td><td>${safe(x.details)}</td><td title="${safe(x.device)}">${safe((x.sessionId||"").slice(0,12))}</td></tr>`).join("")}</tbody></table>`;
+ $("logResults").innerHTML=`<table class="log-table"><thead><tr><th><input type="checkbox" id="selectAllLogs"></th><th>Date / Time</th><th>Hospital</th><th>Action</th><th>Description</th><th>Device</th></tr></thead><tbody>${rows.map(x=>`<tr><td><input type="checkbox" class="log-check" value="${safe(x.id)}"></td><td>${safe(x.time||"")}</td><td>${safe(x.hospital)}</td><td>${safe(x.action)}</td><td>${safe(x.details)}</td><td title="${safe(x.device)}">${safe(x.device.slice(0,25))}...</td></tr>`).join("")}</tbody></table>`;
  const all=$("selectAllLogs");if(all)all.onchange=()=>document.querySelectorAll(".log-check").forEach(c=>c.checked=all.checked);
 }
+
 async function deleteLogs(){
- const ids=[...document.querySelectorAll(".log-check:checked")].map(x=>x.value);if(!ids.length){alert("Select at least one record.");return}
- const pass=prompt("Enter activity deletion password:");if(pass===null)return;if(pass!=="123321"){alert("Incorrect password.");return}
+ const ids=[...document.querySelectorAll(".log-check:checked")].map(x=>x.value);
+ if(!ids.length){alert("Select at least one record.");return}
+ const pass=prompt("Enter activity deletion password:");
+ if(pass===null)return;
+ if(pass!=="123321"){alert("Incorrect password.");return}
  if(!confirm(`Permanently delete ${ids.length} selected activity records?`))return;
  for(const id of ids)await deleteDoc(doc(firestore,"activityLogs",id));
- // Record deletion event after deleting selected rows.
  await logAction("Delete Activity Logs",`Deleted ${ids.length} selected records`,"Administration");
- alert("Selected activity records deleted.");await searchLogs();
+ alert("Selected activity records deleted.");
+ await searchLogs();
 }
+
 async function exportSummaryPdf(){
  if(!$("summaryContent").querySelector("table"))await loadSummary();
- const date=$("summaryDate").value||tomorrow(),snap=await getDocs(query(collection(firestore,"orders"),where("date","==",date)));
+ const date=$("summaryDate").value||tomorrow();
+ const snap=await getDocs(query(collection(firestore,"orders"),where("date","==",date)));
  const orders=snap.docs.map(d=>d.data());
- const {jsPDF}=window.jspdf;const pdf=new jsPDF({orientation:"landscape",unit:"pt",format:"a4"});
- const groupSize=7,groups=[];for(let i=0;i<hospitals.length;i+=groupSize)groups.push(hospitals.slice(i,i+groupSize));
+ const {jsPDF}=window.jspdf;
+ const pdf=new jsPDF({orientation:"landscape",unit:"pt",format:"a4"});
+ const groupSize=7,groups=[];
+ for(let i=0;i<hospitals.length;i+=groupSize)groups.push(hospitals.slice(i,i+groupSize));
  if(!groups.length)groups.push([]);
  groups.forEach((group,gi)=>{
   if(gi)pdf.addPage("a4","landscape");
@@ -187,45 +253,106 @@ async function exportSummaryPdf(){
   pdf.setFont("helvetica","normal");pdf.setFontSize(10);pdf.text("Order Date: "+date,35,69);
   pdf.text("Hospitals "+(gi*groupSize+1)+" - "+Math.min((gi+1)*groupSize,hospitals.length)+" of "+hospitals.length,805,69,{align:"right"});
   const head=[["Item",...group,"Total"]];
-  const body=items.map(item=>{let sum=0;const vals=group.map(h=>{const o=orders.find(x=>x.hospital===h);const v=Number(o?.quantities?.[item]||0);sum+=v;return v?String(v):""});return [item,...vals,sum?String(sum):""]});
+  const body=items.map(item=>{
+   let sum=0;
+   const vals=group.map(h=>{
+    const o=orders.find(x=>x.hospital===h);
+    const v=Number(o?.quantities?.[item]||0);
+    sum+=v;
+    return v?String(v):"";
+   });
+   return [item,...vals,sum?String(sum):""];
+  });
   pdf.autoTable({head,body,startY:82,margin:{left:30,right:30,bottom:30},theme:"grid",styles:{font:"helvetica",fontSize:group.length>6?8:9,cellPadding:4,halign:"center",valign:"middle",lineColor:[205,215,228],lineWidth:.4},headStyles:{fillColor:[23,54,93],textColor:255,fontStyle:"bold"},columnStyles:{0:{cellWidth:190,halign:"left",fontStyle:"bold"},[group.length+1]:{fontStyle:"bold",fillColor:[232,240,248]}},alternateRowStyles:{fillColor:[244,248,252]},didDrawPage:()=>{pdf.setFontSize(8);pdf.setTextColor(100);pdf.text("Fondant Choco | Daily Hospital Orders",30,575)}});
  });
  const blob=pdf.output("blob"),url=URL.createObjectURL(blob),name="Fondant-Choco-Orders-"+date+".pdf";
- // Open preview first, then initiate the download.
- const preview=window.open(url,"_blank");if(!preview){alert("Please allow pop-ups to preview the PDF.");}
+ const preview=window.open(url,"_blank");
+ if(!preview){alert("Please allow pop-ups to preview the PDF.");}
  const a=document.createElement("a");a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();
  await logAction("Export PDF","Previewed and downloaded "+name,"Administration");
 }
+
 function renderMaster(){
  $("hospitalManage").innerHTML=`<ul>${hospitals.map((h,i)=>`<li style="margin:7px 0">${safe(h)} <button class="secondary" data-del-h="${i}">Remove</button></li>`).join("")}</ul>`;
  $("itemManage").innerHTML=`<ul>${items.map((it,i)=>`<li style="margin:7px 0">${safe(it)} <button class="secondary" data-del-i="${i}">Remove</button></li>`).join("")}</ul>`;
- document.querySelectorAll("[data-del-h]").forEach(b=>b.onclick=async()=>{if(!confirm("Remove this hospital from the active list? Historical orders remain saved."))return;const pw=prompt("Enter password to remove a hospital:");if(pw!=="123321"){if(pw!==null)alert("Incorrect password.");return}const h=hospitals.splice(+b.dataset.delH,1)[0];await saveMaster("hospitals",hospitals);setOptions();renderMaster();await logAction("Remove Hospital",h,"Administration")});
- document.querySelectorAll("[data-del-i]").forEach(b=>b.onclick=async()=>{if(!confirm("Remove this item from the active list? Historical orders remain saved."))return;const pw=prompt("Enter password to remove an item:");if(pw!=="123321"){if(pw!==null)alert("Incorrect password.");return}const it=items.splice(+b.dataset.delI,1)[0];await saveMaster("items",items);renderRows();renderMaster();await logAction("Remove Item",it,"Administration")});
+ document.querySelectorAll("[data-del-h]").forEach(b=>b.onclick=async()=>{
+  if(!confirm("Remove this hospital from the active list?"))return;
+  const pw=prompt("Enter password:");if(pw!=="123321"){if(pw!==null)alert("Incorrect password.");return}
+  hospitals.splice(+b.dataset.delH,1);
+  await saveMaster("hospitals",hospitals);
+  setOptions();renderMaster();
+ });
+ document.querySelectorAll("[data-del-i]").forEach(b=>b.onclick=async()=>{
+  if(!confirm("Remove this item from the active list?"))return;
+  const pw=prompt("Enter password:");if(pw!=="123321"){if(pw!==null)alert("Incorrect password.");return}
+  items.splice(+b.dataset.delI,1);
+  await saveMaster("items",items);
+  renderRows();renderMaster();
+ });
 }
-async function addHospital(){const v=$("newHospital").value.trim();if(!v)return;if(hospitals.some(x=>x.toLowerCase()===v.toLowerCase())){alert("Hospital already exists.");return}hospitals.push(v);hospitals.sort();await saveMaster("hospitals",hospitals);$("newHospital").value="";setOptions();renderMaster();await logAction("Add Hospital",v,"Administration")}
-async function addItem(){const v=$("newItem").value.trim();if(!v)return;if(items.some(x=>x.toLowerCase()===v.toLowerCase())){alert("Item already exists.");return}items.push(v);await saveMaster("items",items);$("newItem").value="";renderRows();renderMaster();await logAction("Add Item",v,"Administration")}
-function showTab(id){document.querySelectorAll(".section").forEach(s=>s.classList.toggle("hidden",s.id!==id));document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===id));if(id==="master")renderMaster()}
+
+async function addHospital(){
+ const v=$("newHospital").value.trim();if(!v)return;
+ if(hospitals.some(x=>x.toLowerCase()===v.toLowerCase())){alert("Hospital already exists.");return}
+ hospitals.push(v);hospitals.sort();
+ await saveMaster("hospitals",hospitals);
+ $("newHospital").value="";setOptions();renderMaster();
+}
+
+async function addItem(){
+ const v=$("newItem").value.trim();if(!v)return;
+ if(items.some(x=>x.toLowerCase()===v.toLowerCase())){alert("Item already exists.");return}
+ items.push(v);
+ await saveMaster("items",items);
+ $("newItem").value="";renderRows();renderMaster();
+}
+
+function showTab(id){
+ document.querySelectorAll(".section").forEach(s=>s.classList.toggle("hidden",s.id!==id));
+ document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===id));
+ if(id==="master")renderMaster();
+}
+
 document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
 $("hospitalSearch").addEventListener("input",showHospitalSuggestions);
 $("hospitalSearch").addEventListener("focus",showHospitalSuggestions);
 document.addEventListener("click",e=>{if(!e.target.closest(".autocomplete-wrap"))$("hospitalSuggestions").classList.add("hidden")});
-$("saveOrderTop").onclick=()=>$("saveOrder").click();$("loadOrderTop").onclick=()=>$("loadOrder").click();$("clearFormTop").onclick=()=>$("clearForm").click();
-$("orderDate").value=tomorrow();$("summaryDate").value=tomorrow();$("historyDate").value=addDays(todayLocal(),-1);$("printDate").textContent="Order Date: "+tomorrow();renderRows();updateLock();
+
+$("saveOrderTop").onclick=()=>$("saveOrder").click();
+$("loadOrderTop").onclick=()=>$("loadOrder").click();
+$("clearFormTop").onclick=()=>$("clearForm").click();
+
+$("orderDate").value=tomorrow();
+$("summaryDate").value=tomorrow();
+$("historyDate").value=addDays(todayLocal(),-1);
+$("printDate").textContent="Order Date: "+tomorrow();
+
+renderRows();
+updateLock();
+
 $("orderDate").onchange=()=>{updateLock();$("printDate").textContent="Order Date: "+$("orderDate").value};
-$("saveOrder").onclick=()=>saveOrder().catch(e=>alert(e.message));$("loadOrder").onclick=()=>loadOrder().catch(e=>alert(e.message));$("clearForm").onclick=()=>renderRows();
+$("saveOrder").onclick=()=>saveOrder().catch(e=>alert(e.message));
+$("loadOrder").onclick=()=>loadOrder().catch(e=>alert(e.message));
+$("clearForm").onclick=()=>renderRows();
 $("refreshSummary").onclick=()=>loadSummary().catch(e=>alert(e.message));
 $("printSummary").onclick=()=>window.print();
 $("exportPdf").onclick=()=>exportSummaryPdf().catch(e=>alert("PDF export error: "+e.message));
-$("searchHistory").onclick=()=>searchHistory().catch(e=>alert(e.message));$("searchLogs").onclick=()=>searchLogs().catch(e=>alert(e.message));$("deleteLogs").onclick=()=>deleteLogs().catch(e=>alert(e.message));
-$("addHospital").onclick=()=>addHospital().catch(e=>alert(e.message));$("addItem").onclick=()=>addItem().catch(e=>alert(e.message));
+$("searchHistory").onclick=()=>searchHistory().catch(e=>alert(e.message));
+$("searchLogs").onclick=()=>searchLogs().catch(e=>alert(e.message));
+$("deleteLogs").onclick=()=>deleteLogs().catch(e=>alert(e.message));
+$("addHospital").onclick=()=>addHospital().catch(e=>alert(e.message));
+$("addItem").onclick=()=>addItem().catch(e=>alert(e.message));
+
 async function start(){
  setOptions();renderRows();renderMaster();
- if(firebaseConfig.apiKey==="PASTE_API_KEY"){console.warn("Firebase configuration is not set. Hospital and item defaults are available; cloud saving is disabled.");status("Firebase setup required");return}
- const app=initializeApp(firebaseConfig);auth=getAuth(app);firestore=getFirestore(app);
+ const app=initializeApp(firebaseConfig);
+ firestore=getFirestore(app);
  if(!firestore)throw new Error("Firestore was not initialized.");
- const credential=await signInAnonymously(auth);user=credential.user;
- await getMaster();await logAction("Program Login","Anonymous session started","Not selected");
+ await getMaster();
+ await logAction("Program Login","Session started without Auth","Not selected");
 }
+
 start().catch(e=>{console.error(e);alert("Firebase connection error: "+(e.code||e.message));status("Firebase connection error")});
 </script>
-</body></html>
+</body>
+</html>
