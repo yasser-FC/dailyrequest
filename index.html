@@ -11,26 +11,37 @@
 *{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:Arial,Helvetica,sans-serif;color:var(--text)}
 header{background:linear-gradient(110deg,#142d4e,#2364aa);color:white;padding:16px 22px;display:flex;align-items:center;gap:14px;box-shadow:0 3px 14px #10243b30}
 header img{width:58px;height:58px;object-fit:contain;border-radius:10px;background:white;padding:3px}header h1{font-size:22px;margin:0}header p{margin:4px 0 0;color:#e8eef8;font-size:13px}
-.wrap{max-width:1080px;margin:16px auto;padding:0 12px}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.wrap{max-width:1240px;width:100%;margin:16px auto;padding:0 12px}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
 button,.tab{border:0;border-radius:9px;padding:11px 16px;background:var(--blue);color:#fff;font-weight:700;cursor:pointer}
 button.secondary,.tab{background:#fff;color:var(--navy);border:1px solid var(--line)}button.danger{background:var(--red)}button:disabled{opacity:.45;cursor:not-allowed}
 .tab.active{background:var(--navy);color:#fff}.panel{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:0 5px 20px #1c355010;margin-bottom:16px}
-h2{font-size:19px;margin:0 0 15px;color:var(--navy)}.row{display:flex;gap:12px;align-items:end;flex-wrap:wrap}.field{display:flex;flex-direction:column;gap:6px;min-width:190px;flex:1}
-label{font-size:12px;color:var(--muted);font-weight:700}input,select{padding:11px 12px;border:1px solid #cfd8e3;border-radius:8px;font-size:16px;min-width:0;background:white;color:var(--text)}
-input:focus,select:focus{outline:2px solid #8db9ec;border-color:var(--blue)}.date-big{font-size:19px;font-weight:700;color:var(--navy)}
+h2{font-size:19px;margin:0 0 15px;color:var(--navy)}.row{display:flex;gap:12px;align-items:end;flex-wrap:wrap}.field{display:flex;flex-direction:column;gap:6px;min-width:150px;flex:1}
+.field.hospital-field{flex:2.2;min-width:240px}
+.field.date-field{flex:0.8;max-width:190px;min-width:140px}
+label{font-size:12px;color:var(--muted);font-weight:700}
+input,select{padding:11px 12px;border:1px solid #cfd8e3;border-radius:8px;font-size:16px;min-width:0;background:white;color:var(--text)}
+#hospitalSearch{font-size:18.5px;font-weight:700;color:var(--navy)}
+input:focus,select:focus{outline:2px solid #8db9ec;border-color:var(--blue)}.date-big{font-size:16px;font-weight:700;color:var(--navy)}
 table{width:100%;border-collapse:collapse;table-layout:fixed}th{background:#eaf0f7;color:#17365d;font-size:13px;text-align:left;padding:11px;border:1px solid var(--line)}td{padding:5px 8px;border:1px solid var(--line)}tbody tr:nth-child(odd){background:#f1f6fc}tbody tr:nth-child(even){background:#ffffff}tbody tr:hover{background:#e5effb}td input{width:112px;max-width:100%;text-align:center;font-size:18px;font-weight:700;padding:6px 5px;margin:0 auto;display:block}
 .item-name{font-weight:700;font-size:14px;padding-left:10px}.total{font-weight:800;color:var(--navy);font-size:17px;text-align:center}.muted{color:var(--muted);font-size:13px}.status{font-weight:700}.open{color:var(--green)}.closed{color:var(--red)}
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}.stat{background:#f7f9fc;border:1px solid var(--line);border-radius:10px;padding:13px}.stat b{font-size:24px;color:var(--navy);display:block}.stat span{font-size:12px;color:var(--muted)}
-.log-table td{font-size:13px}.hidden{display:none!important}.search{max-width:360px}.notice{padding:11px 13px;background:#fff8e6;border:1px solid #f1d58b;border-radius:8px;color:#72520a;margin:10px 0;font-size:13px}
+.log-table td{font-size:13px}.hidden{display:none!important}.notice{padding:11px 13px;background:#fff8e6;border:1px solid #f1d58b;border-radius:8px;color:#72520a;margin:10px 0;font-size:13px}
 footer{text-align:center;color:#64748b;font-size:12px;padding:18px}.signature-card{position:fixed;bottom:14px;left:14px;background:#fff;color:#1554a0;border:1.5px solid #c62828;border-radius:7px;padding:7px 11px;box-shadow:0 5px 16px #0002;z-index:10;text-decoration:none;font-size:10px;font-weight:700;animation:float 6s ease-in-out infinite}
 .signature-card .sub{font-size:9px;font-weight:500}@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
-@media(max-width:700px){header h1{font-size:18px}.panel{padding:12px}.table-scroll{overflow-x:auto}table{min-width:0}.field{min-width:145px}}
-@media print{body{background:white}.no-print,header,.tabs,footer,.signature-card{display:none!important}.wrap{max-width:none;margin:0;padding:0}.panel{box-shadow:none;border:0;padding:0}.print-title{display:block!important}table{font-size:10px}th,td{padding:5px}td input{border:0;font-size:14px}.page-break{break-before:page}}
-.print-title{display:none}
 .qty:disabled{background:#f2f4f7;color:#667085}
 .order-tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:0 0 12px}
-.autocomplete-wrap{position:relative}.suggestions{position:absolute;z-index:30;left:0;right:0;top:100%;background:#fff;border:1px solid #cfd8e3;border-radius:8px;max-height:220px;overflow:auto;box-shadow:0 8px 20px #0002}.suggestions button{display:block;width:100%;text-align:left;border-radius:0;background:#fff;color:#182230;border-bottom:1px solid #eef1f5}.suggestions button:hover{background:#eaf2fb}
-@media print{.wrap{max-width:none}.summary-table th,.summary-table td{font-size:9pt}}
+
+/* تلوين وتمييز قائمة اقتراحات المستشفيات */
+.autocomplete-wrap{position:relative}
+.suggestions{position:absolute;z-index:30;left:0;right:0;top:100%;background:#fffdf6;border:2px solid var(--gold);border-radius:8px;max-height:240px;overflow:auto;box-shadow:0 8px 24px rgba(23,54,93,0.2)}
+.suggestions button{display:block;width:100%;text-align:left;border-radius:0;background:#fffdf6;color:var(--navy);font-weight:700;padding:12px 14px;border-bottom:1px solid #f2e3b8;font-size:15px}
+.suggestions button:hover{background:#fbe9b7;color:#10243b}
+
+@media(max-width:768px){
+  header h1{font-size:18px}.panel{padding:12px}.table-scroll{overflow-x:auto}
+  .row{flex-direction:column;align-items:stretch}.field,.field.hospital-field,.field.date-field{width:100%;max-width:none}
+}
+@media print{body{background:white}.no-print,header,.tabs,footer,.signature-card{display:none!important}.wrap{max-width:none;margin:0;padding:0}.panel{box-shadow:none;border:0;padding:0}.print-title{display:block!important}table{font-size:10px}th,td{padding:5px}td input{border:0;font-size:14px}}
+.print-title{display:none}
 </style>
 </head>
 <body>
@@ -47,16 +58,20 @@ footer{text-align:center;color:#64748b;font-size:12px;padding:18px}.signature-ca
   <div class="panel no-print">
    <h2>Enter Hospital Order</h2>
    <div class="row">
-    <div class="field autocomplete-wrap"><label>Hospital (type to search)</label><input id="hospitalSearch" autocomplete="off" placeholder="Type hospital name..."><div id="hospitalSuggestions" class="suggestions hidden"></div></div><datalist id="hospitalList"></datalist>
-    <div class="field"><label>Order Date (default: tomorrow)</label><input id="orderDate" type="date" class="date-big"></div>
+    <div class="field autocomplete-wrap hospital-field"><label>Hospital Name (Type to search)</label><input id="hospitalSearch" autocomplete="off" placeholder="Type hospital name..."><div id="hospitalSuggestions" class="suggestions hidden"></div></div><datalist id="hospitalList"></datalist>
+    <div class="field date-field"><label>Order Date</label><input id="orderDate" type="date" class="date-big"></div>
     <div class="field" style="flex:0 0 auto"><label>Order Status</label><div id="orderStatus" class="status open">Open for editing</div></div>
    </div>
    <div id="lockNotice" class="notice hidden">This order is closed. Editing is no longer allowed.</div>
-   <p class="muted">Enter quantities only. Leave cells blank when no quantity is required. Changes are saved to Firebase when you click Save Order.</p>
   </div>
   <div class="panel">
    <div class="print-title"><h2>FONDANT CHOCO — DAILY HOSPITAL ORDERS</h2><p id="printDate"></p></div>
-   <div class="row no-print" style="justify-content:space-between;margin-bottom:10px"><h2 style="margin:0">Order Items</h2><div class="muted" id="saveState">Not saved</div></div>
+   <div class="row no-print" style="justify-content:space-between;margin-bottom:10px">
+     <h2 style="margin:0">Order Items</h2>
+     <!-- مربع البحث بالحرف عن اسم الصنف -->
+     <div class="field" style="max-width:280px;margin:0;"><input id="itemSearchInput" type="text" placeholder="🔍 Search item by letter..." style="padding:7px 10px;font-size:14px"></div>
+     <div class="muted" id="saveState">Not saved</div>
+   </div>
    <div class="order-tools no-print"><button id="saveOrderTop">Save Order</button><button class="secondary" id="loadOrderTop">Load Saved Order</button><button class="secondary" id="clearFormTop">Clear Form</button></div>
    <div class="table-scroll"><table><thead><tr><th style="width:65%">Item</th><th style="width:35%;text-align:center">Quantity</th></tr></thead><tbody id="orderRows"></tbody></table></div>
    <div class="row no-print" style="margin-top:14px"><button id="saveOrder">Save Order</button><button class="secondary" id="loadOrder">Load Saved Order</button><button class="secondary" id="clearForm">Clear Form</button></div>
@@ -93,7 +108,7 @@ const DEFAULT_HOSPITALS=["Al-Adan Hospital","Al-Jahra Hospital","Al-Razi Hospita
 const DEFAULT_ITEMS=["Sweet Graham","Halloum Croll Sandwich","Turkey Croll Sandwich","Chicken Croll Sandwich","Mix Fried Sandwich","Feta Sandwich","Halloum Brown Sandwich","Turkish Brown Sandwich With Sesame","Brown Chicken Sandwich With Sesame","Halloum Sandwich","Turkey Sandwich","Chicken Sandwich","Chicken Saj","Halloum Saj","Grape Leaves Lemon","Grape Leaves Roman","Mohalabiya","Brownies Cups","Saffron Cake","Tiramisu Cheesecake","Chocolate Box","Strawberry Cheesecake","Chocolate Cheesecake","Nutella Kinder","Dulcie Kinder","Crystal Baby","Regular Crystal","Wood Baby"];
 
 const $=id=>document.getElementById(id);
-let firestore,hospitals=[...DEFAULT_HOSPITALS],items=[...DEFAULT_ITEMS],activeLogIds=[];
+let firestore,hospitals=[...DEFAULT_HOSPITALS],items=[...DEFAULT_ITEMS];
 
 const todayLocal=()=>{const d=new Date();return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10)};
 const addDays=(s,n)=>{const d=new Date(s+"T12:00:00");d.setDate(d.getDate()+n);return d.toISOString().slice(0,10)};
@@ -114,12 +129,17 @@ function showHospitalSuggestions(){
  box.querySelectorAll("button").forEach(b=>b.onclick=()=>{$("hospitalSearch").value=b.dataset.hospital;box.classList.add("hidden");loadOrder().catch(e=>alert(e.message));});
 }
 
+// عرض الأصناف وتطبيق التصفية بحسب البحث
 function renderRows(values={}){
- $("orderRows").innerHTML=items.map((item)=>`<tr><td class="item-name">${safe(item)}</td><td><input class="qty" data-item="${safe(item)}" type="text" inputmode="decimal" autocomplete="off" value="${values[item]??""}" placeholder=""></td></tr>`).join("");
+ const query = ($("itemSearchInput")?$("itemSearchInput").value:"").trim().toLowerCase();
+ $("orderRows").innerHTML=items.map((item)=>{
+  const isMatch = !query || item.toLowerCase().includes(query);
+  return `<tr class="${isMatch?'':'hidden'}"><td class="item-name">${safe(item)}</td><td><input class="qty" data-item="${safe(item)}" type="text" inputmode="decimal" autocomplete="off" value="${values[item]??""}" placeholder=""></td></tr>`;
+ }).join("");
  document.querySelectorAll(".qty").forEach((el,i)=>{
   el.addEventListener("keydown",e=>{
    if(["ArrowDown","ArrowUp","Enter"].includes(e.key)){
-    e.preventDefault();const a=[...document.querySelectorAll(".qty")];const next=e.key==="ArrowUp"?i-1:i+1;
+    e.preventDefault();const a=[...document.querySelectorAll(".qty:not(.hidden)")];const next=e.key==="ArrowUp"?i-1:i+1;
     if(a[next]){a[next].focus();a[next].select();}
    }
   });
@@ -159,6 +179,7 @@ async function loadOrder(){
  $("lockNotice").classList.toggle("hidden",isEditable(date));
 }
 
+// مسح حقل المستشفى وشاشة الإدخال بعد الحفظ
 async function saveOrder(){
  const hospital=selectedHospital(),date=$("orderDate").value;
  if(!hospital){alert("Please select a hospital.");return}
@@ -167,8 +188,15 @@ async function saveOrder(){
  document.querySelectorAll(".qty").forEach(x=>{const v=x.value.trim();if(v!==""&&Number(v)!==0)quantities[x.dataset.item]=Number(v)});
  await setDoc(doc(firestore,"orders",orderKey(date,hospital)),{hospital,date,quantities,updatedAt:serverTimestamp()},{merge:true});
  await logAction("Save Order",`Saved ${Object.keys(quantities).length} item quantities`,hospital);
+ 
  status("Saved successfully");
  alert("Order saved successfully.");
+ 
+ // مسح البيانات والشاشة تلقائياً
+ $("hospitalSearch").value = "";
+ if($("itemSearchInput")) $("itemSearchInput").value = "";
+ renderRows();
+ status("Form cleared for next order");
 }
 
 function updateLock(){
@@ -222,11 +250,11 @@ async function searchLogs(){
  const from=$("logFrom").value,to=$("logTo").value,hosp=$("logHospital").value.trim();
  const snap=await getDocs(collection(firestore,"activityLogs"));
  let rows=snap.docs.map(d=>({id:d.id,...d.data()})).filter(x=>(!from||x.date>=from)&&(!to||x.date<=to)&&(!hosp||x.hospital===hosp)).sort((a,b)=>(b.time||"").localeCompare(a.time||""));
- activeLogIds=rows.map(x=>x.id);
  $("logResults").innerHTML=`<table class="log-table"><thead><tr><th><input type="checkbox" id="selectAllLogs"></th><th>Date / Time</th><th>Hospital</th><th>Action</th><th>Description</th><th>Device</th></tr></thead><tbody>${rows.map(x=>`<tr><td><input type="checkbox" class="log-check" value="${safe(x.id)}"></td><td>${safe(x.time||"")}</td><td>${safe(x.hospital)}</td><td>${safe(x.action)}</td><td>${safe(x.details)}</td><td title="${safe(x.device)}">${safe(x.device.slice(0,25))}...</td></tr>`).join("")}</tbody></table>`;
  const all=$("selectAllLogs");if(all)all.onchange=()=>document.querySelectorAll(".log-check").forEach(c=>c.checked=all.checked);
 }
 
+// مسح السجلات بدون تسجيل حركة الحذف ضمن السجل
 async function deleteLogs(){
  const ids=[...document.querySelectorAll(".log-check:checked")].map(x=>x.value);
  if(!ids.length){alert("Select at least one record.");return}
@@ -247,11 +275,11 @@ async function exportSummaryPdf(){
  const {jsPDF}=window.jspdf;
  
  const pdf=new jsPDF({orientation:"landscape",unit:"pt",format:"a4"});
- const pageWidth=pdf.internal.pageSize.getWidth();
+ const pageWidth = pdf.internal.pageSize.getWidth();
  
  pdf.setFont("helvetica","bold");
  pdf.setFontSize(10);
- pdf.text(`FONDANT CHOCO — DAILY HOSPITAL ORDERS | Date: ${date} | Total Hospitals: ${hospitals.length}`, pageWidth / 2, 20, {align:"center"});
+ pdf.text(`FONDANT CHOCO — DAILY HOSPITAL ORDERS | Date: ${date} | Total Hospitals: ${hospitals.length}`, pageWidth / 2, 18, {align:"center"});
  
  const head=[["Item",...hospitals,"Total"]];
  const body=items.map(item=>{
@@ -265,22 +293,28 @@ async function exportSummaryPdf(){
   return [item,...vals,sum?String(sum):""];
  });
 
+ const availableWidth = pageWidth - 20;
+ const col0Width = 140;
+ const totalColWidth = 42;
+ const remainingWidth = availableWidth - col0Width - totalColWidth;
+ const hospitalColWidth = remainingWidth / hospitals.length;
+
  const colStyles = {
-  0: { cellWidth: 120, halign: "left", fontStyle: "bold" },
-  [hospitals.length + 1]: { cellWidth: 32, fontStyle: "bold", fillColor: [232, 240, 248] }
+  0: { cellWidth: col0Width, halign: "left", fontStyle: "bold" },
+  [hospitals.length + 1]: { cellWidth: totalColWidth, fontStyle: "bold", fillColor: [232, 240, 248] }
  };
- hospitals.forEach((_, idx) => { colStyles[idx + 1] = { cellWidth: 38, halign: "center" }; });
+ hospitals.forEach((_, idx) => { colStyles[idx + 1] = { cellWidth: hospitalColWidth, halign: "center" }; });
 
  pdf.autoTable({
   head,
   body,
-  startY: 28,
-  margin: { top: 25, left: 15, right: 15, bottom: 15 },
+  startY: 25,
+  margin: { top: 20, left: 10, right: 10, bottom: 10 },
   theme: "grid",
   styles: {
    font: "helvetica",
-   fontSize: 8.4,
-   cellPadding: 2,
+   fontSize: 8.5,
+   cellPadding: 2.5,  // تقليل حشوة الخلية لتقليل الارتفاع الإجمالي
    halign: "center",
    valign: "middle",
    lineColor: [205, 215, 228],
@@ -290,9 +324,9 @@ async function exportSummaryPdf(){
    fillColor: [23, 54, 93],
    textColor: 255,
    fontStyle: "bold",
-   fontSize: 7.5,
-   cellPadding: 2,
-   minCellHeight: 85
+   fontSize: 7,
+   cellPadding: 1,
+   minCellHeight: 65 // تقليل ارتفاع رأس الجدول لمنع الانقسام لصفحتين
   },
   columnStyles: colStyles,
   alternateRowStyles: { fillColor: [244, 248, 252] },
@@ -312,10 +346,10 @@ async function exportSummaryPdf(){
     pdf.saveGraphicsState();
     pdf.setTextColor(255, 255, 255);
     pdf.setFont("helvetica", "bold");
-    pdf.setFontSize(7.5);
+    pdf.setFontSize(7);
 
     const text = data.cell.text.join(' ');
-    const x = data.cell.x + (data.cell.width / 2) + 2;
+    const x = data.cell.x + (data.cell.width / 2) + 2.5;
     const y = data.cell.y + data.cell.height - 4;
 
     pdf.text(text, x, y, { angle: 90 });
@@ -379,6 +413,10 @@ $("hospitalSearch").addEventListener("input",showHospitalSuggestions);
 $("hospitalSearch").addEventListener("focus",showHospitalSuggestions);
 document.addEventListener("click",e=>{if(!e.target.closest(".autocomplete-wrap"))$("hospitalSuggestions").classList.add("hidden")});
 
+if($("itemSearchInput")){
+  $("itemSearchInput").addEventListener("input",()=>renderRows());
+}
+
 $("saveOrderTop").onclick=()=>$("saveOrder").click();
 $("loadOrderTop").onclick=()=>$("loadOrder").click();
 $("clearFormTop").onclick=()=>$("clearForm").click();
@@ -394,7 +432,11 @@ updateLock();
 $("orderDate").onchange=()=>{updateLock();$("printDate").textContent="Order Date: "+$("orderDate").value};
 $("saveOrder").onclick=()=>saveOrder().catch(e=>alert(e.message));
 $("loadOrder").onclick=()=>loadOrder().catch(e=>alert(e.message));
-$("clearForm").onclick=()=>renderRows();
+$("clearForm").onclick=()=>{
+  $("hospitalSearch").value = "";
+  if($("itemSearchInput")) $("itemSearchInput").value = "";
+  renderRows();
+};
 $("refreshSummary").onclick=()=>loadSummary().catch(e=>alert(e.message));
 $("printSummary").onclick=()=>window.print();
 $("exportPdf").onclick=()=>exportSummaryPdf().catch(e=>alert("PDF export error: "+e.message));
