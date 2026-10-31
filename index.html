@@ -75,6 +75,7 @@ footer{text-align:center;color:#64748b;font-size:12px;padding:18px}.signature-ca
  <footer>Fondant Choco · Daily Hospital Orders</footer>
 </div>
 <a class="signature-card" href="https://yasser-q8.github.io/myprofile/#" target="_blank" rel="noopener"><div>Yasser Elkhateeb</div><div class="sub">Program Developer · 67011143</div></a>
+
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {getFirestore,collection,doc,getDoc,getDocs,setDoc,addDoc,deleteDoc,query,where,serverTimestamp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -130,6 +131,9 @@ async function logAction(action,details="",hospital=selectedHospital()){
  if(!firestore)return;
  try{
   await addDoc(collection(firestore,"activityLogs"),{date:todayLocal(),timestamp:serverTimestamp(),time:new Date().toISOString(),hospital:hospital||"Not selected",action,details,device:navigator.userAgent});
+  if(!$("activity").classList.contains("hidden")){
+    searchLogs().catch(console.error);
+  }
  }catch(e){console.error("Activity log error",e)}
 }
 
@@ -231,7 +235,6 @@ async function deleteLogs(){
  if(pass!=="123321"){alert("Incorrect password.");return}
  if(!confirm(`Permanently delete ${ids.length} selected activity records?`))return;
  for(const id of ids)await deleteDoc(doc(firestore,"activityLogs",id));
- await logAction("Delete Activity Logs",`Deleted ${ids.length} selected records`,"Administration");
  alert("Selected activity records deleted.");
  await searchLogs();
 }
@@ -242,29 +245,86 @@ async function exportSummaryPdf(){
  const snap=await getDocs(query(collection(firestore,"orders"),where("date","==",date)));
  const orders=snap.docs.map(d=>d.data());
  const {jsPDF}=window.jspdf;
+ 
  const pdf=new jsPDF({orientation:"landscape",unit:"pt",format:"a4"});
- const groupSize=7,groups=[];
- for(let i=0;i<hospitals.length;i+=groupSize)groups.push(hospitals.slice(i,i+groupSize));
- if(!groups.length)groups.push([]);
- groups.forEach((group,gi)=>{
-  if(gi)pdf.addPage("a4","landscape");
-  pdf.setFont("helvetica","bold");pdf.setFontSize(17);pdf.text("FONDANT CHOCO",420,30,{align:"center"});
-  pdf.setFontSize(12);pdf.text("DAILY HOSPITAL ORDERS",420,49,{align:"center"});
-  pdf.setFont("helvetica","normal");pdf.setFontSize(10);pdf.text("Order Date: "+date,35,69);
-  pdf.text("Hospitals "+(gi*groupSize+1)+" - "+Math.min((gi+1)*groupSize,hospitals.length)+" of "+hospitals.length,805,69,{align:"right"});
-  const head=[["Item",...group,"Total"]];
-  const body=items.map(item=>{
-   let sum=0;
-   const vals=group.map(h=>{
-    const o=orders.find(x=>x.hospital===h);
-    const v=Number(o?.quantities?.[item]||0);
-    sum+=v;
-    return v?String(v):"";
-   });
-   return [item,...vals,sum?String(sum):""];
+ const pageWidth=pdf.internal.pageSize.getWidth();
+ 
+ pdf.setFont("helvetica","bold");
+ pdf.setFontSize(10);
+ pdf.text(`FONDANT CHOCO — DAILY HOSPITAL ORDERS | Date: ${date} | Total Hospitals: ${hospitals.length}`, pageWidth / 2, 20, {align:"center"});
+ 
+ const head=[["Item",...hospitals,"Total"]];
+ const body=items.map(item=>{
+  let sum=0;
+  const vals=hospitals.map(h=>{
+   const o=orders.find(x=>x.hospital===h);
+   const v=Number(o?.quantities?.[item]||0);
+   sum+=v;
+   return v?String(v):"";
   });
-  pdf.autoTable({head,body,startY:82,margin:{left:30,right:30,bottom:30},theme:"grid",styles:{font:"helvetica",fontSize:group.length>6?8:9,cellPadding:4,halign:"center",valign:"middle",lineColor:[205,215,228],lineWidth:.4},headStyles:{fillColor:[23,54,93],textColor:255,fontStyle:"bold"},columnStyles:{0:{cellWidth:190,halign:"left",fontStyle:"bold"},[group.length+1]:{fontStyle:"bold",fillColor:[232,240,248]}},alternateRowStyles:{fillColor:[244,248,252]},didDrawPage:()=>{pdf.setFontSize(8);pdf.setTextColor(100);pdf.text("Fondant Choco | Daily Hospital Orders",30,575)}});
+  return [item,...vals,sum?String(sum):""];
  });
+
+ const colStyles = {
+  0: { cellWidth: 120, halign: "left", fontStyle: "bold" },
+  [hospitals.length + 1]: { cellWidth: 32, fontStyle: "bold", fillColor: [232, 240, 248] }
+ };
+ hospitals.forEach((_, idx) => { colStyles[idx + 1] = { cellWidth: 38, halign: "center" }; });
+
+ pdf.autoTable({
+  head,
+  body,
+  startY: 28,
+  margin: { top: 25, left: 15, right: 15, bottom: 15 },
+  theme: "grid",
+  styles: {
+   font: "helvetica",
+   fontSize: 8.4,
+   cellPadding: 2,
+   halign: "center",
+   valign: "middle",
+   lineColor: [205, 215, 228],
+   lineWidth: 0.3
+  },
+  headStyles: {
+   fillColor: [23, 54, 93],
+   textColor: 255,
+   fontStyle: "bold",
+   fontSize: 7.5,
+   cellPadding: 2,
+   minCellHeight: 85
+  },
+  columnStyles: colStyles,
+  alternateRowStyles: { fillColor: [244, 248, 252] },
+  didParseCell: function(data) {
+   if (data.section === 'head' && data.column.index > 0 && data.column.index <= hospitals.length) {
+    data.cell.styles.valign = 'bottom';
+   }
+  },
+  customDrawCell: function(data) {
+   if (data.section === 'head' && data.column.index > 0 && data.column.index <= hospitals.length) {
+    pdf.setFillColor(23, 54, 93);
+    pdf.rect(data.cell.x, data.cell.y, data.cell.width, data.cell.height, 'F');
+    pdf.setDrawColor(205, 215, 228);
+    pdf.setLineWidth(0.3);
+    pdf.rect(data.cell.x, data.cell.y, data.cell.width, data.cell.height, 'S');
+
+    pdf.saveGraphicsState();
+    pdf.setTextColor(255, 255, 255);
+    pdf.setFont("helvetica", "bold");
+    pdf.setFontSize(7.5);
+
+    const text = data.cell.text.join(' ');
+    const x = data.cell.x + (data.cell.width / 2) + 2;
+    const y = data.cell.y + data.cell.height - 4;
+
+    pdf.text(text, x, y, { angle: 90 });
+    pdf.restoreGraphicsState();
+    return false;
+   }
+  }
+ });
+
  const blob=pdf.output("blob"),url=URL.createObjectURL(blob),name="Fondant-Choco-Orders-"+date+".pdf";
  const preview=window.open(url,"_blank");
  if(!preview){alert("Please allow pop-ups to preview the PDF.");}
@@ -311,6 +371,7 @@ function showTab(id){
  document.querySelectorAll(".section").forEach(s=>s.classList.toggle("hidden",s.id!==id));
  document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===id));
  if(id==="master")renderMaster();
+ if(id==="activity")searchLogs().catch(console.error);
 }
 
 document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
