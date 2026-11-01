@@ -25,7 +25,6 @@ input:focus,select:focus{outline:2px solid #8ab4f8;border-color:var(--blue)}.dat
 table{width:100%;border-collapse:collapse;table-layout:fixed}th{background:#e7f0fa;color:#1a4a6e;font-size:13px;text-align:left;padding:11px;border:1px solid var(--line)}td{padding:5px 8px;border:1px solid var(--line)}tbody tr:nth-child(odd){background:#f0f5fc}tbody tr:nth-child(even){background:#ffffff}tbody tr:hover{background:#e5f0fb}td input{width:112px;max-width:100%;text-align:center;font-size:18px;font-weight:700;padding:6px 5px;margin:0 auto;display:block}
 .item-name{font-weight:700;font-size:14px;padding-left:10px}.total{font-weight:800;color:var(--navy);font-size:17px;text-align:center}.muted{color:var(--muted);font-size:13px}.status{font-weight:700}.open{color:var(--green)}.closed{color:var(--red)}
 
-/* تحسين شاشة السجل وتكبير عامود الجهاز وتفاصيله */
 .log-table th:first-child, .log-table td:first-child{width:38px;text-align:center}
 .log-table th:last-child, .log-table td:last-child{width:300px;word-break:break-word;font-size:11.5px;color:#2d3748}
 
@@ -187,6 +186,12 @@ function selectedHospital(isReturn=false){return $(isReturn?"returnHospitalSearc
 function docKey(date,hospital){return date+"__"+hospital}
 function setOptions(){ $("hospitalList").innerHTML=hospitals.map(x=>`<option value="${safe(x)}">`).join(""); }
 
+// التحقق المباشر: هل اسم المستشفى موجود ومطابق تماماً في القائمة المسموحة؟
+function isAllowedHospital(hName){
+  if(!hName) return false;
+  return hospitals.some(h => h.toLowerCase() === hName.toLowerCase());
+}
+
 function showSuggestions(isReturn=false){
  const inputId = isReturn?"returnHospitalSearch":"hospitalSearch";
  const boxId = isReturn?"returnHospitalSuggestions":"hospitalSuggestions";
@@ -218,7 +223,6 @@ function renderRows(values={}, containerId="orderRows", inputSearchId="itemSearc
  });
 }
 
-// تسجبل الجهاز بالكامل وبشكل موثوق
 async function logAction(action,details="",hospital=""){
  if(!firestore)return;
  try{
@@ -249,6 +253,10 @@ async function saveMaster(type,values){ await setDoc(doc(firestore,"settings",ty
 async function loadOrder(){
  const hospital=selectedHospital(),date=$("orderDate").value;
  if(!hospital){alert("Please select a hospital.");return}
+ if(!isAllowedHospital(hospital)){
+   alert(`⚠️ Error: Hospital name "${hospital}" is not in the allowed list! Please pick a hospital from the suggestions list.`);
+   return;
+ }
  const snap=await getDoc(doc(firestore,"orders",docKey(date,hospital)));
  const values=snap.exists()?snap.data().quantities||{}:{};
  renderRows(values);updateLock();status(snap.exists()?"Saved order loaded":"No saved order found");
@@ -260,6 +268,11 @@ async function loadOrder(){
 async function saveOrder(){
  const hospital=selectedHospital(),date=$("orderDate").value;
  if(!hospital){alert("Please select a hospital.");return}
+ // التحقق من وجود اسم المستشفى في القائمة المحفوظة
+ if(!isAllowedHospital(hospital)){
+   alert(`⚠️ Error: Hospital name "${hospital}" is NOT allowed!\nYou cannot enter or type custom hospital names. Please choose from the list.`);
+   return;
+ }
  if(!isEditable(date)){alert("This order is closed for editing.");return}
  const quantities={};
  document.querySelectorAll("#orderRows .qty").forEach(x=>{const v=x.value.trim();if(v!==""&&Number(v)!==0)quantities[x.dataset.item]=Number(v)});
@@ -274,6 +287,10 @@ async function saveOrder(){
 async function loadReturn(){
  const hospital=selectedHospital(true),date=$("returnDate").value;
  if(!hospital){alert("Please select a hospital.");return}
+ if(!isAllowedHospital(hospital)){
+   alert(`⚠️ Error: Hospital name "${hospital}" is not in the allowed list! Please pick a hospital from the list.`);
+   return;
+ }
  const snap=await getDoc(doc(firestore,"returns",docKey(date,hospital)));
  const values=snap.exists()?snap.data().quantities||{}:{};
  renderRows(values, "returnRows", "returnItemSearchInput"); status(snap.exists()?"Saved return loaded":"No return document found", "returnSaveState");
@@ -282,6 +299,11 @@ async function loadReturn(){
 async function saveReturn(){
  const hospital=selectedHospital(true),date=$("returnDate").value;
  if(!hospital){alert("Please select a hospital.");return}
+ // التحقق من وجود اسم المستشفى في القائمة المحفوظة للمرتجعات
+ if(!isAllowedHospital(hospital)){
+   alert(`⚠️ Error: Hospital name "${hospital}" is NOT allowed!\nYou cannot enter or type custom hospital names. Please choose from the list.`);
+   return;
+ }
  const quantities={};
  document.querySelectorAll("#returnRows .qty").forEach(x=>{const v=x.value.trim();if(v!==""&&Number(v)!==0)quantities[x.dataset.item]=Number(v)});
  await setDoc(doc(firestore,"returns",docKey(date,hospital)),{hospital,date,quantities,updatedAt:serverTimestamp()},{merge:true});
@@ -300,7 +322,6 @@ function updateLock(){
  document.querySelectorAll("#orderRows .qty").forEach(x=>x.disabled=!open);
 }
 
-// جلب وتفريغ ملخص الطلبات أو المرتجعات بحسب التاريخ المطلوب
 async function loadSummary(collectionName="orders", targetContainerId="summaryContent", titleText="Orders Summary", customDate=null){
  const date = customDate || $("summaryDate").value;
  if(!date)return;
@@ -371,7 +392,7 @@ async function deleteLogs(){
  alert("Selected activity records deleted."); await searchLogs();
 }
 
-/* --- تصدير الـ PDF المستشفيات والأصناف --- */
+/* --- تصدير الـ PDF --- */
 async function generatePdfReport(collectionName="orders", title="DAILY HOSPITAL ORDERS"){
  const date=$("summaryDate").value||tomorrow();
  const snap=await getDocs(query(collection(firestore,collectionName),where("date","==",date)));
@@ -504,10 +525,7 @@ $("saveReturn").onclick=()=>saveReturn().catch(e=>alert(e.message));
 $("loadReturn").onclick=()=>loadReturn().catch(e=>alert(e.message));
 $("clearReturnForm").onclick=()=>{ $("returnHospitalSearch").value = ""; if($("returnItemSearchInput")) $("returnItemSearchInput").value = ""; renderRows({}, "returnRows", "returnItemSearchInput"); };
 
-// عند الضغط على Load Orders Summary يتم تفريغ طلبات الغد مباشرة
 $("refreshSummary").onclick=()=>loadSummary("orders", "summaryContent", "Orders Summary", tomorrow()).catch(e=>alert(e.message));
-
-// عند الضغط على Preview Returns يتم تفريغ وتفقد مرتجعات اليوم مباشرة
 $("previewReturns").onclick=()=>loadSummary("returns", "summaryContent", "Returns Summary", todayLocal()).catch(e=>alert(e.message));
 
 $("exportPdf").onclick=()=>generatePdfReport("orders", "DAILY HOSPITAL ORDERS").catch(e=>alert("PDF error: "+e.message));
