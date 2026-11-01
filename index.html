@@ -25,10 +25,10 @@ input:focus,select:focus{outline:2px solid #8ab4f8;border-color:var(--blue)}.dat
 table{width:100%;border-collapse:collapse;table-layout:fixed}th{background:#e7f0fa;color:#1a4a6e;font-size:13px;text-align:left;padding:11px;border:1px solid var(--line)}td{padding:5px 8px;border:1px solid var(--line)}tbody tr:nth-child(odd){background:#f0f5fc}tbody tr:nth-child(even){background:#ffffff}tbody tr:hover{background:#e5f0fb}td input{width:112px;max-width:100%;text-align:center;font-size:18px;font-weight:700;padding:6px 5px;margin:0 auto;display:block}
 .item-name{font-weight:700;font-size:14px;padding-left:10px}.total{font-weight:800;color:var(--navy);font-size:17px;text-align:center}.muted{color:var(--muted);font-size:13px}.status{font-weight:700}.open{color:var(--green)}.closed{color:var(--red)}
 
+/* تحسين شاشة السجل وتكبير عامود الجهاز وتفاصيله */
 .log-table th:first-child, .log-table td:first-child{width:38px;text-align:center}
-.log-table th:last-child, .log-table td:last-child{width:320px;word-break:break-word;font-size:11.5px;color:#4a5568}
+.log-table th:last-child, .log-table td:last-child{width:300px;word-break:break-word;font-size:11.5px;color:#2d3748}
 
-/* زر وتبويب المرتجعات بلون مختلف ومميز تماماً */
 .tab.returns-tab{background:#b83232;color:#fff}
 .tab.returns-tab.active{background:#7a1d1d;color:#fff;border:2px solid var(--gold)}
 .returns-panel{background:var(--return-bg);border:2px dashed var(--return-border)}
@@ -91,7 +91,7 @@ footer{text-align:center;color:#64748b;font-size:12px;padding:18px}.signature-ca
   </div>
  </section>
 
- <!-- شاشة المرتجعات (متميزة بصرياً بلون تحذيري/مغاير) -->
+ <!-- شاشة المرتجعات -->
  <section id="returns" class="section hidden">
   <div class="panel returns-panel no-print">
    <h2>Hospital Returns Recording <span class="returns-header-badge">RETURNS MODE</span></h2>
@@ -112,7 +112,7 @@ footer{text-align:center;color:#64748b;font-size:12px;padding:18px}.signature-ca
   </div>
  </section>
 
- <!-- شاشة الملخص والـ PDF مع زر معاينة المرتجعات -->
+ <!-- شاشة الملخص والـ PDF -->
  <section id="summary" class="section hidden">
   <div class="panel no-print">
     <h2>Daily Consolidated Summary</h2>
@@ -218,10 +218,20 @@ function renderRows(values={}, containerId="orderRows", inputSearchId="itemSearc
  });
 }
 
+// تسجبل الجهاز بالكامل وبشكل موثوق
 async function logAction(action,details="",hospital=""){
  if(!firestore)return;
  try{
-  await addDoc(collection(firestore,"activityLogs"),{date:todayLocal(),timestamp:serverTimestamp(),time:new Date().toISOString(),hospital:hospital||selectedHospital()||"System",action,details,device:navigator.userAgent});
+  const deviceInfo = navigator.userAgent || "Unknown Device";
+  await addDoc(collection(firestore,"activityLogs"),{
+    date:todayLocal(),
+    timestamp:serverTimestamp(),
+    time:new Date().toISOString(),
+    hospital:hospital||selectedHospital()||"System",
+    action,
+    details,
+    device:deviceInfo
+  });
   if(!$("activity").classList.contains("hidden")){ searchLogs().catch(console.error); }
  }catch(e){console.error("Activity log error",e)}
 }
@@ -290,17 +300,19 @@ function updateLock(){
  document.querySelectorAll("#orderRows .qty").forEach(x=>x.disabled=!open);
 }
 
-async function loadSummary(collectionName="orders", targetContainerId="summaryContent", titleText="Orders Summary"){
- const date=$("summaryDate").value;if(!date)return;
+// جلب وتفريغ ملخص الطلبات أو المرتجعات بحسب التاريخ المطلوب
+async function loadSummary(collectionName="orders", targetContainerId="summaryContent", titleText="Orders Summary", customDate=null){
+ const date = customDate || $("summaryDate").value;
+ if(!date)return;
+ $("summaryDate").value = date;
  const snap=await getDocs(query(collection(firestore,collectionName),where("date","==",date)));
  const data=snap.docs.map(d=>d.data()),allHosp=[...hospitals];
 
- // فلترة الأعمدة غير المستخدمة لكي تظهر معاينة المرتجعات نظيفة
  const activeHospitals = collectionName==="returns" ? allHosp.filter(h => data.some(d => d.hospital === h && Object.values(d.quantities||{}).some(v=>Number(v)>0))) : allHosp;
  const activeItems = collectionName==="returns" ? items.filter(i => data.some(d => Number(d.quantities?.[i]||0) > 0)) : items;
 
  if(collectionName==="returns" && (!activeHospitals.length || !activeItems.length)){
-   $(targetContainerId).innerHTML=`<p class="muted">No returns recorded for ${date}.</p>`;
+   $(targetContainerId).innerHTML=`<p class="muted" style="color:#b83232;font-weight:bold;">No returns recorded for ${date}.</p>`;
    return;
  }
 
@@ -315,10 +327,10 @@ async function loadSummary(collectionName="orders", targetContainerId="summaryCo
  });
  html+=`</tbody></table>`;
  $(targetContainerId).innerHTML=html; 
- if(collectionName==="orders") $("summaryPrintDate").textContent="Summary Date: "+date;
+ $("summaryPrintDate").textContent=titleText + " Date: " + date;
+ await logAction("View Summary", `Loaded ${collectionName} for ${date}`, "Administration");
 }
 
-/* --- سجل الطلبات وتحديث زر حذف الطلبات البرمجي --- */
 async function searchHistory(){
  const hosp=$("historyHospital").value.trim(),fromDate=$("historyFromDate").value,toDate=$("historyDate").value;
  let snaps=await getDocs(collection(firestore,"orders"));
@@ -345,7 +357,7 @@ async function searchLogs(){
  const from=$("logFrom").value,to=$("logTo").value,hosp=$("logHospital").value.trim();
  const snap=await getDocs(collection(firestore,"activityLogs"));
  let rows=snap.docs.map(d=>({id:d.id,...d.data()})).filter(x=>(!from||x.date>=from)&&(!to||x.date<=to)&&(!hosp||x.hospital===hosp)).sort((a,b)=>(b.time||"").localeCompare(a.time||""));
- $("logResults").innerHTML=`<table class="log-table"><thead><tr><th><input type="checkbox" id="selectAllLogs"></th><th>Date / Time</th><th>Hospital</th><th>Action</th><th>Description</th><th>Device Info</th></tr></thead><tbody>${rows.map(x=>`<tr><td><input type="checkbox" class="log-check" value="${safe(x.id)}"></td><td>${safe(x.time||"")}</td><td>${safe(x.hospital)}</td><td>${safe(x.action)}</td><td>${safe(x.details)}</td><td title="${safe(x.device)}">${safe(x.device)}</td></tr>`).join("")}</tbody></table>`;
+ $("logResults").innerHTML=`<table class="log-table"><thead><tr><th><input type="checkbox" id="selectAllLogs"></th><th>Date / Time</th><th>Hospital</th><th>Action</th><th>Description</th><th>Device Info</th></tr></thead><tbody>${rows.map(x=>`<tr><td><input type="checkbox" class="log-check" value="${safe(x.id)}"></td><td>${safe(x.time||"")}</td><td>${safe(x.hospital)}</td><td>${safe(x.action)}</td><td>${safe(x.details)}</td><td title="${safe(x.device)}">${safe(x.device||"Unknown")}</td></tr>`).join("")}</tbody></table>`;
  const all=$("selectAllLogs");if(all)all.onchange=()=>document.querySelectorAll(".log-check").forEach(c=>c.checked=all.checked);
 }
 
@@ -492,8 +504,11 @@ $("saveReturn").onclick=()=>saveReturn().catch(e=>alert(e.message));
 $("loadReturn").onclick=()=>loadReturn().catch(e=>alert(e.message));
 $("clearReturnForm").onclick=()=>{ $("returnHospitalSearch").value = ""; if($("returnItemSearchInput")) $("returnItemSearchInput").value = ""; renderRows({}, "returnRows", "returnItemSearchInput"); };
 
-$("refreshSummary").onclick=()=>loadSummary("orders", "summaryContent", "Orders Summary").catch(e=>alert(e.message));
-$("previewReturns").onclick=()=>loadSummary("returns", "summaryContent", "Returns Summary").catch(e=>alert(e.message));
+// عند الضغط على Load Orders Summary يتم تفريغ طلبات الغد مباشرة
+$("refreshSummary").onclick=()=>loadSummary("orders", "summaryContent", "Orders Summary", tomorrow()).catch(e=>alert(e.message));
+
+// عند الضغط على Preview Returns يتم تفريغ وتفقد مرتجعات اليوم مباشرة
+$("previewReturns").onclick=()=>loadSummary("returns", "summaryContent", "Returns Summary", todayLocal()).catch(e=>alert(e.message));
 
 $("exportPdf").onclick=()=>generatePdfReport("orders", "DAILY HOSPITAL ORDERS").catch(e=>alert("PDF error: "+e.message));
 $("exportReturnsPdf").onclick=()=>generatePdfReport("returns", "DAILY HOSPITAL RETURNS").catch(e=>alert("PDF error: "+e.message));
