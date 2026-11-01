@@ -7,46 +7,45 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <style>
-:root{--navy:#6b1d2f;--blue:#8a253c;--gold:#e6b84a;--bg:#f8f4f5;--line:#e5d4d8;--text:#182230;--muted:#667085;--green:#16865b;--red:#c0392b;--return-bg:#fdf3f4;--return-border:#d98293}
+:root{--navy:#1a4a6e;--blue:#256596;--gold:#e6b84a;--bg:#f4f7fb;--line:#d8e2ed;--text:#182230;--muted:#667085;--green:#16865b;--red:#c0392b;--return-bg:#fdf3f4;--return-border:#d98293}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:Arial,Helvetica,sans-serif;color:var(--text)}
-header{background:linear-gradient(110deg,#4d1421,#6b1d2f);color:white;padding:16px 22px;display:flex;align-items:center;gap:14px;box-shadow:0 3px 14px #6b1d2f30}
-header img{width:58px;height:58px;object-fit:contain;border-radius:10px;background:white;padding:3px}header h1{font-size:22px;margin:0}header p{margin:4px 0 0;color:#f3e3e6;font-size:13px}
+header{background:linear-gradient(110deg,#10314a,#1a4a6e);color:white;padding:16px 22px;display:flex;align-items:center;gap:14px;box-shadow:0 3px 14px #1a4a6e30}
+header img{width:58px;height:58px;object-fit:contain;border-radius:10px;background:white;padding:3px}header h1{font-size:22px;margin:0}header p{margin:4px 0 0;color:#d1e3f3;font-size:13px}
 .wrap{max-width:1178px;width:100%;margin:16px auto;padding:0 12px}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
 button,.tab{border:0;border-radius:9px;padding:11px 16px;background:var(--blue);color:#fff;font-weight:700;cursor:pointer}
 button.secondary,.tab{background:#fff;color:var(--navy);border:1px solid var(--line)}button.danger{background:var(--red)}button:disabled{opacity:.45;cursor:not-allowed}
-.tab.active{background:var(--navy);color:#fff}.panel{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:0 5px 20px #6b1d2f10;margin-bottom:16px}
+.tab.active{background:var(--navy);color:#fff}.panel{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:0 5px 20px #1a4a6e10;margin-bottom:16px}
 h2{font-size:19px;margin:0 0 15px;color:var(--navy)}.row{display:flex;gap:12px;align-items:end;flex-wrap:wrap}.field{display:flex;flex-direction:column;gap:6px;min-width:150px;flex:1}
 .field.hospital-field{flex:2.2;min-width:240px}
 .field.date-field{flex:0.8;max-width:190px;min-width:140px}
 label{font-size:12px;color:var(--muted);font-weight:700}
 input,select{padding:11px 12px;border:1px solid #cfd8e3;border-radius:8px;font-size:16px;min-width:0;background:white;color:var(--text)}
 .hospitalSearchInput{font-size:20.5px;font-weight:700;color:var(--navy)}
-input:focus,select:focus{outline:2px solid #d493a3;border-color:var(--blue)}.date-big{font-size:16px;font-weight:700;color:var(--navy)}
-table{width:100%;border-collapse:collapse;table-layout:fixed}th{background:#f4ecee;color:#6b1d2f;font-size:13px;text-align:left;padding:11px;border:1px solid var(--line)}td{padding:5px 8px;border:1px solid var(--line)}tbody tr:nth-child(odd){background:#fcf8f8}tbody tr:nth-child(even){background:#ffffff}tbody tr:hover{background:#f7eef0}td input{width:112px;max-width:100%;text-align:center;font-size:18px;font-weight:700;padding:6px 5px;margin:0 auto;display:block}
+input:focus,select:focus{outline:2px solid #8ab4f8;border-color:var(--blue)}.date-big{font-size:16px;font-weight:700;color:var(--navy)}
+table{width:100%;border-collapse:collapse;table-layout:fixed}th{background:#e7f0fa;color:#1a4a6e;font-size:13px;text-align:left;padding:11px;border:1px solid var(--line)}td{padding:5px 8px;border:1px solid var(--line)}tbody tr:nth-child(odd){background:#f0f5fc}tbody tr:nth-child(even){background:#ffffff}tbody tr:hover{background:#e5f0fb}td input{width:112px;max-width:100%;text-align:center;font-size:18px;font-weight:700;padding:6px 5px;margin:0 auto;display:block}
 .item-name{font-weight:700;font-size:14px;padding-left:10px}.total{font-weight:800;color:var(--navy);font-size:17px;text-align:center}.muted{color:var(--muted);font-size:13px}.status{font-weight:700}.open{color:var(--green)}.closed{color:var(--red)}
 
-/* تحسين شاشة السجل وتكبير اسم الجهاز وتصغير خانة التحديد */
 .log-table th:first-child, .log-table td:first-child{width:38px;text-align:center}
 .log-table th:last-child, .log-table td:last-child{width:320px;word-break:break-word;font-size:11.5px;color:#4a5568}
 
-/* تمييز شاشة المرتجعات بصرياً لعدم اللبس */
-.tab.returns-tab{background:#9e2a2b;color:#fff}
-.tab.returns-tab.active{background:#541212;color:#fff;border:2px solid var(--gold)}
+/* زر وتبويب المرتجعات بلون مختلف ومميز تماماً */
+.tab.returns-tab{background:#b83232;color:#fff}
+.tab.returns-tab.active{background:#7a1d1d;color:#fff;border:2px solid var(--gold)}
 .returns-panel{background:var(--return-bg);border:2px dashed var(--return-border)}
-.returns-panel h2{color:#9e2a2b;display:flex;align-items:center;gap:8px}
-.returns-panel h2::before{content:"⚠️";font-size:18px}
-.returns-header-badge{background:#9e2a2b;color:white;padding:4px 10px;border-radius:6px;font-size:12px;font-weight:bold;margin-left:auto}
+.returns-panel h2{color:#b83232;display:flex;align-items:center;gap:8px}
+.returns-panel h2::before{content:"🔄";font-size:18px}
+.returns-header-badge{background:#b83232;color:white;padding:4px 10px;border-radius:6px;font-size:12px;font-weight:bold;margin-left:auto}
 
 .hidden{display:none!important}.notice{padding:11px 13px;background:#fff8e6;border:1px solid #f1d58b;border-radius:8px;color:#72520a;margin:10px 0;font-size:13px}
-footer{text-align:center;color:#64748b;font-size:12px;padding:18px}.signature-card{position:fixed;bottom:14px;left:14px;background:#fff;color:#6b1d2f;border:1.5px solid #6b1d2f;border-radius:7px;padding:7px 11px;box-shadow:0 5px 16px #0002;z-index:10;text-decoration:none;font-size:10px;font-weight:700;animation:float 6s ease-in-out infinite}
+footer{text-align:center;color:#64748b;font-size:12px;padding:18px}.signature-card{position:fixed;bottom:14px;left:14px;background:#fff;color:#1a4a6e;border:1.5px solid #1a4a6e;border-radius:7px;padding:7px 11px;box-shadow:0 5px 16px #0002;z-index:10;text-decoration:none;font-size:10px;font-weight:700;animation:float 6s ease-in-out infinite}
 .signature-card .sub{font-size:9px;font-weight:500}@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
 .qty:disabled{background:#f2f4f7;color:#667085}
 .order-tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:0 0 12px}
 
 .autocomplete-wrap{position:relative}
-.suggestions{position:absolute;z-index:30;left:0;right:0;top:100%;background:#fffdf6;border:2px solid var(--gold);border-radius:8px;max-height:240px;overflow:auto;box-shadow:0 8px 24px rgba(107,29,47,0.2)}
+.suggestions{position:absolute;z-index:30;left:0;right:0;top:100%;background:#fffdf6;border:2px solid var(--gold);border-radius:8px;max-height:240px;overflow:auto;box-shadow:0 8px 24px rgba(26,74,110,0.2)}
 .suggestions button{display:block;width:100%;text-align:left;border-radius:0;background:#fffdf6;color:var(--navy);font-weight:700;padding:12px 14px;border-bottom:1px solid #f2e3b8;font-size:15px}
-.suggestions button:hover{background:#fbe9b7;color:#4d1421}
+.suggestions button:hover{background:#e5f0fb;color:#10314a}
 
 @media(max-width:768px){
   header h1{font-size:18px}.panel{padding:12px}.table-scroll{overflow-x:auto}
@@ -92,7 +91,7 @@ footer{text-align:center;color:#64748b;font-size:12px;padding:18px}.signature-ca
   </div>
  </section>
 
- <!-- شاشة المرتجعات (متميزة بصرياً) -->
+ <!-- شاشة المرتجعات (متميزة بصرياً بلون تحذيري/مغاير) -->
  <section id="returns" class="section hidden">
   <div class="panel returns-panel no-print">
    <h2>Hospital Returns Recording <span class="returns-header-badge">RETURNS MODE</span></h2>
@@ -103,23 +102,32 @@ footer{text-align:center;color:#64748b;font-size:12px;padding:18px}.signature-ca
   </div>
   <div class="panel returns-panel">
    <div class="row no-print" style="justify-content:space-between;margin-bottom:10px">
-     <h2 style="margin:0;color:#9e2a2b">Returned Items List</h2>
+     <h2 style="margin:0;color:#b83232">Returned Items List</h2>
      <div class="field" style="max-width:280px;margin:0;"><input id="returnItemSearchInput" type="text" placeholder="🔍 Search item..." style="padding:7px 10px;font-size:14px"></div>
      <div class="muted" id="returnSaveState">Not saved</div>
    </div>
-   <div class="order-tools no-print"><button style="background:#9e2a2b" id="saveReturnTop">Save Return Document</button><button class="secondary" id="loadReturnTop">Load Return</button><button class="secondary" id="clearReturnFormTop">Clear</button></div>
+   <div class="order-tools no-print"><button style="background:#b83232" id="saveReturnTop">Save Return Document</button><button class="secondary" id="loadReturnTop">Load Return</button><button class="secondary" id="clearReturnFormTop">Clear</button></div>
    <div class="table-scroll"><table><thead><tr><th style="width:65%">Item Name</th><th style="width:35%;text-align:center">Returned Qty</th></tr></thead><tbody id="returnRows"></tbody></table></div>
-   <div class="row no-print" style="margin-top:14px"><button style="background:#9e2a2b" id="saveReturn">Save Return Document</button><button class="secondary" id="loadReturn">Load Return</button><button class="secondary" id="clearReturnForm">Clear</button></div>
+   <div class="row no-print" style="margin-top:14px"><button style="background:#b83232" id="saveReturn">Save Return Document</button><button class="secondary" id="loadReturn">Load Return</button><button class="secondary" id="clearReturnForm">Clear</button></div>
   </div>
  </section>
 
- <!-- شاشة الملخص والـ PDF -->
+ <!-- شاشة الملخص والـ PDF مع زر معاينة المرتجعات -->
  <section id="summary" class="section hidden">
-  <div class="panel no-print"><h2>Daily Consolidated Summary</h2><div class="row"><div class="field"><label>Select Date</label><input id="summaryDate" type="date"></div><button id="refreshSummary">Load Orders Summary</button><button id="exportPdf">Download Orders PDF</button><button style="background:#9e2a2b" id="exportReturnsPdf">Download Returns PDF 📄</button></div></div>
+  <div class="panel no-print">
+    <h2>Daily Consolidated Summary</h2>
+    <div class="row">
+      <div class="field"><label>Select Date</label><input id="summaryDate" type="date"></div>
+      <button id="refreshSummary">Load Orders Summary</button>
+      <button style="background:#b83232" id="previewReturns">Preview Returns 👁️</button>
+      <button id="exportPdf">Download Orders PDF</button>
+      <button style="background:#b83232" id="exportReturnsPdf">Download Returns PDF 📄</button>
+    </div>
+  </div>
   <div class="panel"><div class="print-title"><h2>FONDANT CHOCO — CONSOLIDATED REPORT</h2><p id="summaryPrintDate"></p></div><div id="summaryContent" class="table-scroll"><p class="muted">Choose a date to display summary data.</p></div></div>
  </section>
 
- <!-- شاشة سجل الطلبات المحدثة مع إلغاء الطلبات -->
+ <!-- شاشة سجل الطلبات -->
  <section id="history" class="section hidden">
   <div class="panel">
     <h2>Recent Orders History</h2>
@@ -282,21 +290,32 @@ function updateLock(){
  document.querySelectorAll("#orderRows .qty").forEach(x=>x.disabled=!open);
 }
 
-async function loadSummary(){
+async function loadSummary(collectionName="orders", targetContainerId="summaryContent", titleText="Orders Summary"){
  const date=$("summaryDate").value;if(!date)return;
- const snap=await getDocs(query(collection(firestore,"orders"),where("date","==",date)));
+ const snap=await getDocs(query(collection(firestore,collectionName),where("date","==",date)));
  const data=snap.docs.map(d=>d.data()),allHosp=[...hospitals];
- let html=`<table><thead><tr><th>Item</th>${allHosp.map(h=>`<th>${safe(h)}</th>`).join("")}<th>Total</th></tr></thead><tbody>`;
- items.forEach(item=>{
+
+ // فلترة الأعمدة غير المستخدمة لكي تظهر معاينة المرتجعات نظيفة
+ const activeHospitals = collectionName==="returns" ? allHosp.filter(h => data.some(d => d.hospital === h && Object.values(d.quantities||{}).some(v=>Number(v)>0))) : allHosp;
+ const activeItems = collectionName==="returns" ? items.filter(i => data.some(d => Number(d.quantities?.[i]||0) > 0)) : items;
+
+ if(collectionName==="returns" && (!activeHospitals.length || !activeItems.length)){
+   $(targetContainerId).innerHTML=`<p class="muted">No returns recorded for ${date}.</p>`;
+   return;
+ }
+
+ let html=`<h3 style="color:${collectionName==='returns'?'#b83232':'var(--navy)'}">${titleText} (${date})</h3><table><thead><tr><th>Item</th>${activeHospitals.map(h=>`<th>${safe(h)}</th>`).join("")}<th>Total</th></tr></thead><tbody>`;
+ activeItems.forEach(item=>{
   let total=0; html+=`<tr><td class="item-name">${safe(item)}</td>`;
-  allHosp.forEach(h=>{
+  activeHospitals.forEach(h=>{
    const o=data.find(x=>x.hospital===h); const v=Number(o?.quantities?.[item]||0);
    total+=v; html+=`<td class="total">${v?fmt(v):""}</td>`;
   });
   html+=`<td class="total">${total?fmt(total):""}</td></tr>`;
  });
- html+=`</tbody><tfoot><tr><th>Orders Received</th>${allHosp.map(h=>`<th>${data.some(o=>o.hospital===h)?"Yes":"No"}</th>`).join("")}<th>${data.length}/${allHosp.length}</th></tr></tfoot></table>`;
- $("summaryContent").innerHTML=html; $("summaryPrintDate").textContent="Summary Date: "+date;
+ html+=`</tbody></table>`;
+ $(targetContainerId).innerHTML=html; 
+ if(collectionName==="orders") $("summaryPrintDate").textContent="Summary Date: "+date;
 }
 
 /* --- سجل الطلبات وتحديث زر حذف الطلبات البرمجي --- */
@@ -346,9 +365,7 @@ async function generatePdfReport(collectionName="orders", title="DAILY HOSPITAL 
  const snap=await getDocs(query(collection(firestore,collectionName),where("date","==",date)));
  const docsData=snap.docs.map(d=>d.data());
 
- // فلترة وحذف المستشفيات التي لا تملك أي بيانات/مرتجعات
  const activeHospitals = hospitals.filter(h => docsData.some(d => d.hospital === h && Object.values(d.quantities||{}).some(v=>Number(v)>0)));
- // فلترة وحذف الأصناف غير الموجودة بالكامل
  const activeItems = items.filter(i => docsData.some(d => Number(d.quantities?.[i]||0) > 0));
 
  if(!activeHospitals.length || !activeItems.length){
@@ -362,7 +379,7 @@ async function generatePdfReport(collectionName="orders", title="DAILY HOSPITAL 
  
  pdf.setFont("helvetica","bold");
  pdf.setFontSize(11);
- const headerBg = collectionName==="returns" ? [158, 42, 43] : [107, 29, 47];
+ const headerBg = collectionName==="returns" ? [184, 50, 50] : [26, 74, 110];
  pdf.text(`FONDANT CHOCO — ${title} | Date: ${date} | Hospitals: ${activeHospitals.length}`, pageWidth / 2, 18, {align:"center"});
  
  const head=[["Item",...activeHospitals,"Total"]];
@@ -381,19 +398,19 @@ async function generatePdfReport(collectionName="orders", title="DAILY HOSPITAL 
  const remainingWidth = availableWidth - col0Width - totalColWidth;
  const hospitalColWidth = remainingWidth / activeHospitals.length;
 
- const colStyles = { 0: { cellWidth: col0Width, halign: "left", fontStyle: "bold" }, [activeHospitals.length + 1]: { cellWidth: totalColWidth, fontStyle: "bold", fillColor: [240, 230, 233] } };
+ const colStyles = { 0: { cellWidth: col0Width, halign: "left", fontStyle: "bold" }, [activeHospitals.length + 1]: { cellWidth: totalColWidth, fontStyle: "bold", fillColor: [229, 240, 251] } };
  activeHospitals.forEach((_, idx) => { colStyles[idx + 1] = { cellWidth: hospitalColWidth, halign: "center" }; });
 
  pdf.autoTable({
   head, body, startY: 24, margin: { top: 18, left: 8, right: 8, bottom: 8 }, theme: "grid",
-  styles: { font: "helvetica", fontSize: activeHospitals.length < 8 ? 9.5 : 8.5, cellPadding: activeHospitals.length < 8 ? 3.5 : 2.5, halign: "center", valign: "middle", lineColor: [220, 205, 209], lineWidth: 0.25 },
+  styles: { font: "helvetica", fontSize: activeHospitals.length < 8 ? 9.5 : 8.5, cellPadding: activeHospitals.length < 8 ? 3.5 : 2.5, halign: "center", valign: "middle", lineColor: [216, 226, 237], lineWidth: 0.25 },
   headStyles: { fillColor: headerBg, textColor: 255, fontStyle: "bold", fontSize: 7.5, cellPadding: 1, minCellHeight: 55 },
-  columnStyles: colStyles, alternateRowStyles: { fillColor: [252, 248, 249] },
+  columnStyles: colStyles, alternateRowStyles: { fillColor: [240, 245, 252] },
   didParseCell: function(data) { if (data.section === 'head' && data.column.index > 0 && data.column.index <= activeHospitals.length) data.cell.styles.valign = 'bottom'; },
   customDrawCell: function(data) {
    if (data.section === 'head' && data.column.index > 0 && data.column.index <= activeHospitals.length) {
     pdf.setFillColor(headerBg[0], headerBg[1], headerBg[2]); pdf.rect(data.cell.x, data.cell.y, data.cell.width, data.cell.height, 'F');
-    pdf.setDrawColor(220, 205, 209); pdf.setLineWidth(0.25); pdf.rect(data.cell.x, data.cell.y, data.cell.width, data.cell.height, 'S');
+    pdf.setDrawColor(216, 226, 237); pdf.setLineWidth(0.25); pdf.rect(data.cell.x, data.cell.y, data.cell.width, data.cell.height, 'S');
     pdf.saveGraphicsState(); pdf.setTextColor(255, 255, 255); pdf.setFont("helvetica", "bold"); pdf.setFontSize(7.5);
     const text = data.cell.text.join(' '); pdf.text(text, data.cell.x + (data.cell.width / 2) + 2, data.cell.y + data.cell.height - 3, { angle: 90 });
     pdf.restoreGraphicsState(); return false;
@@ -475,7 +492,9 @@ $("saveReturn").onclick=()=>saveReturn().catch(e=>alert(e.message));
 $("loadReturn").onclick=()=>loadReturn().catch(e=>alert(e.message));
 $("clearReturnForm").onclick=()=>{ $("returnHospitalSearch").value = ""; if($("returnItemSearchInput")) $("returnItemSearchInput").value = ""; renderRows({}, "returnRows", "returnItemSearchInput"); };
 
-$("refreshSummary").onclick=()=>loadSummary().catch(e=>alert(e.message));
+$("refreshSummary").onclick=()=>loadSummary("orders", "summaryContent", "Orders Summary").catch(e=>alert(e.message));
+$("previewReturns").onclick=()=>loadSummary("returns", "summaryContent", "Returns Summary").catch(e=>alert(e.message));
+
 $("exportPdf").onclick=()=>generatePdfReport("orders", "DAILY HOSPITAL ORDERS").catch(e=>alert("PDF error: "+e.message));
 $("exportReturnsPdf").onclick=()=>generatePdfReport("returns", "DAILY HOSPITAL RETURNS").catch(e=>alert("PDF error: "+e.message));
 
