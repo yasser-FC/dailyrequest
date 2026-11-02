@@ -59,7 +59,7 @@ footer{text-align:center;color:#64748b;font-size:12px;padding:18px}.signature-ca
 <div class="wrap">
  <div class="tabs no-print">
   <button class="tab active" data-tab="orders">Hospital Orders</button>
-  <button class="tab returns-tab" data-tab="returns">Hospital Wastage 🔄</button>
+  <button class="tab returns-tab" data-tab="returns">Hospital Returns 🔄</button>
   <button class="tab" data-tab="summary">Daily Summary</button>
   <button class="tab" data-tab="history">Order History</button>
   <button class="tab" data-tab="activity">Activity Log</button>
@@ -186,7 +186,6 @@ function selectedHospital(isReturn=false){return $(isReturn?"returnHospitalSearc
 function docKey(date,hospital){return date+"__"+hospital}
 function setOptions(){ $("hospitalList").innerHTML=hospitals.map(x=>`<option value="${safe(x)}">`).join(""); }
 
-// التحقق المباشر: هل اسم المستشفى موجود ومطابق تماماً في القائمة المسموحة؟
 function isAllowedHospital(hName){
   if(!hName) return false;
   return hospitals.some(h => h.toLowerCase() === hName.toLowerCase());
@@ -254,7 +253,7 @@ async function loadOrder(){
  const hospital=selectedHospital(),date=$("orderDate").value;
  if(!hospital){alert("Please select a hospital.");return}
  if(!isAllowedHospital(hospital)){
-   alert(`⚠️ Error: Hospital name "${hospital}" is not in the allowed list! Please pick a hospital from the suggestions list.`);
+   alert(`⚠️ Error: Hospital name "${hospital}" is not in the allowed list! Please pick a hospital from the list.`);
    return;
  }
  const snap=await getDoc(doc(firestore,"orders",docKey(date,hospital)));
@@ -268,14 +267,21 @@ async function loadOrder(){
 async function saveOrder(){
  const hospital=selectedHospital(),date=$("orderDate").value;
  if(!hospital){alert("Please select a hospital.");return}
- // التحقق من وجود اسم المستشفى في القائمة المحفوظة
  if(!isAllowedHospital(hospital)){
-   alert(`⚠️ Error: Hospital name "${hospital}" is NOT allowed!\nYou cannot enter or type custom hospital names. Please choose from the list.`);
+   alert(`⚠️ Error: Hospital name "${hospital}" is NOT allowed!\nPlease choose a valid hospital from the list.`);
    return;
  }
  if(!isEditable(date)){alert("This order is closed for editing.");return}
+ 
  const quantities={};
  document.querySelectorAll("#orderRows .qty").forEach(x=>{const v=x.value.trim();if(v!==""&&Number(v)!==0)quantities[x.dataset.item]=Number(v)});
+ 
+ // التحقق التام: لا يسمح بحفظ الطلب إذا كان فارغاً
+ if(Object.keys(quantities).length === 0){
+   alert("⚠️ Cannot save an empty order!\nPlease enter at least one item quantity before saving.");
+   return;
+ }
+
  await setDoc(doc(firestore,"orders",docKey(date,hospital)),{hospital,date,quantities,updatedAt:serverTimestamp()},{merge:true});
  await logAction("Save Order",`Saved ${Object.keys(quantities).length} items`,hospital);
  alert("Order saved successfully.");
@@ -299,13 +305,20 @@ async function loadReturn(){
 async function saveReturn(){
  const hospital=selectedHospital(true),date=$("returnDate").value;
  if(!hospital){alert("Please select a hospital.");return}
- // التحقق من وجود اسم المستشفى في القائمة المحفوظة للمرتجعات
  if(!isAllowedHospital(hospital)){
-   alert(`⚠️ Error: Hospital name "${hospital}" is NOT allowed!\nYou cannot enter or type custom hospital names. Please choose from the list.`);
+   alert(`⚠️ Error: Hospital name "${hospital}" is NOT allowed!\nPlease choose a valid hospital from the list.`);
    return;
  }
+ 
  const quantities={};
  document.querySelectorAll("#returnRows .qty").forEach(x=>{const v=x.value.trim();if(v!==""&&Number(v)!==0)quantities[x.dataset.item]=Number(v)});
+ 
+ // التحقق التام: لا يسمح بحفظ المرتجع إذا كان فارغاً
+ if(Object.keys(quantities).length === 0){
+   alert("⚠️ Cannot save an empty return document!\nPlease enter at least one returned item quantity before saving.");
+   return;
+ }
+
  await setDoc(doc(firestore,"returns",docKey(date,hospital)),{hospital,date,quantities,updatedAt:serverTimestamp()},{merge:true});
  await logAction("Save Return",`Recorded returns for ${Object.keys(quantities).length} items`,hospital);
  alert("Return document saved successfully.");
