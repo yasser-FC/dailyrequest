@@ -7,25 +7,38 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <style>
-:root{--navy:#1a4a6e;--blue:#256596;--gold:#e6b84a;--bg:#f4f7fb;--line:#d8e2ed;--text:#182230;--muted:#667085;--green:#16865b;--red:#c0392b;--return-bg:#fdf3f4;--return-border:#d98293}
+:root{--navy:#1a4a6e;--blue:#256596;--gold:#e6b84a;--bg:#f4f7fb;--line:#64748b;--text:#182230;--muted:#667085;--green:#16865b;--red:#c0392b;--return-bg:#fdf3f4;--return-border:#d98293}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:Arial,Helvetica,sans-serif;color:var(--text)}
 header{background:linear-gradient(110deg,#10314a,#1a4a6e);color:white;padding:16px 22px;display:flex;align-items:center;gap:14px;box-shadow:0 3px 14px #1a4a6e30}
 header img{width:58px;height:58px;object-fit:contain;border-radius:10px;background:white;padding:3px}header h1{font-size:22px;margin:0}header p{margin:4px 0 0;color:#d1e3f3;font-size:13px}
 .wrap{max-width:1178px;width:100%;margin:16px auto;padding:0 12px}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
 button,.tab{border:0;border-radius:9px;padding:11px 16px;background:var(--blue);color:#fff;font-weight:700;cursor:pointer}
-button.secondary,.tab{background:#fff;color:var(--navy);border:1px solid var(--line)}button.danger{background:var(--red)}button:disabled{opacity:.45;cursor:not-allowed}
+button.secondary,.tab{background:#fff;color:var(--navy);border:1px solid #94a3b8}button.danger{background:var(--red)}button:disabled{opacity:.45;cursor:not-allowed}
 .tab.active{background:var(--navy);color:#fff}
 .tab.orders-tab{background:var(--green);color:#fff;}
 .tab.orders-tab.active{background:#0f5c3b;color:#fff;}
-.panel{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:0 5px 20px #1a4a6e10;margin-bottom:16px}
+.panel{background:#fff;border:1px solid #94a3b8;border-radius:14px;padding:18px;box-shadow:0 5px 20px #1a4a6e10;margin-bottom:16px}
 h2{font-size:19px;margin:0 0 15px;color:var(--navy)}.row{display:flex;gap:12px;align-items:end;flex-wrap:wrap}.field{display:flex;flex-direction:column;gap:6px;min-width:150px;flex:1}
 .field.hospital-field{flex:2.2;min-width:240px}
 .field.date-field{flex:0.8;max-width:190px;min-width:140px}
 label{font-size:12px;color:var(--muted);font-weight:700}
-input,select{padding:11px 12px;border:1px solid #cfd8e3;border-radius:8px;font-size:16px;min-width:0;background:white;color:var(--text)}
+input,select{padding:11px 12px;border:1.5px solid #64748b;border-radius:8px;font-size:16px;min-width:0;background:white;color:var(--text)}
 .hospitalSearchInput{font-size:20.5px;font-weight:700;color:var(--navy)}
 input:focus,select:focus{outline:2px solid #8ab4f8;border-color:var(--blue)}.date-big{font-size:16px;font-weight:700;color:var(--navy)}
-table{width:100%;border-collapse:collapse;table-layout:fixed}th{background:#e7f0fa;color:#1a4a6e;font-size:13px;text-align:left;padding:11px;border:1px solid var(--line)}td{padding:5px 8px;border:1px solid var(--line)}tbody tr:nth-child(odd){background:#f0f5fc}tbody tr:nth-child(even){background:#ffffff}tbody tr:hover{background:#e5f0fb}td input{width:112px;max-width:100%;text-align:center;font-size:18px;font-weight:700;padding:6px 5px;margin:0 auto;display:block}
+
+/* تحسينات حدود وتناوب جدول الطلبات للشاشة والطباعة */
+table{width:100%;border-collapse:collapse;table-layout:fixed;border:2px solid #334155}
+th{background:#cbd5e1;color:#0f172a;font-size:13px;text-align:left;padding:11px;border:1.5px solid #475569;font-weight:bold}
+td{padding:6px 8px;border:1.5px solid #475569}
+#orderRows tr:nth-child(even){background:#ffffff}
+#orderRows tr:nth-child(odd){background:#cbd5e1}
+#orderRows tr:hover{background:#94a3b8}
+
+/* تناوب ألوان المرتجعات باللون الأحمر الخفيف */
+#returnRows tr:nth-child(even){background:#ffffff}
+#returnRows tr:nth-child(odd){background:#fce8e6}
+#returnRows tr:hover{background:#f8d7da}
+td input{width:112px;max-width:100%;text-align:center;font-size:18px;font-weight:700;padding:6px 5px;margin:0 auto;display:block;border:1.5px solid #475569;border-radius:6px}
 .item-name{font-weight:700;font-size:14px;padding-left:10px}.total{font-weight:800;color:var(--navy);font-size:17px;text-align:center}.muted{color:var(--muted);font-size:13px}.status{font-weight:700}.open{color:var(--green)}.closed{color:var(--red)}
 
 .log-table th:first-child, .log-table td:first-child{width:38px;text-align:center}
@@ -53,7 +66,13 @@ footer{text-align:center;color:#64748b;font-size:12px;padding:18px}.signature-ca
   header h1{font-size:18px}.panel{padding:12px}.table-scroll{overflow-x:auto}
   .row{flex-direction:column;align-items:stretch}.field,.field.hospital-field,.field.date-field{width:100%;max-width:none}
 }
-@media print{body{background:white}.no-print,header,.tabs,footer,.signature-card{display:none!important}.wrap{max-width:none;margin:0;padding:0}.panel{box-shadow:none;border:0;padding:0}.print-title{display:block!important}table{font-size:10px}th,td{padding:5px}td input{border:0;font-size:14px}}
+@media print{
+  body{background:white}.no-print,header,.tabs,footer,.signature-card{display:none!important}.wrap{max-width:none;margin:0;padding:0}.panel{box-shadow:none;border:0;padding:0}.print-title{display:block!important}
+  table{font-size:11px;border:2px solid #000!important}th,td{padding:5px;border:1.5px solid #000!important}
+  #orderRows tr:nth-child(odd){background:#d1d5db!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  #returnRows tr:nth-child(odd){background:#fca5a5!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  td input{border:0;font-size:14px;background:transparent!important}
+}
 .print-title{display:none}
 </style>
 </head>
@@ -113,8 +132,7 @@ footer{text-align:center;color:#64748b;font-size:12px;padding:18px}.signature-ca
    <div class="row no-print" style="margin-top:14px"><button style="background:#b83232" id="saveReturn">Save Return Document</button><button class="secondary" id="loadReturn">Load Return</button><button class="secondary" id="clearReturnForm">Clear</button></div>
   </div>
  </section>
-
- <!-- شاشة الملخص والـ PDF -->
+<!-- شاشة الملخص والـ PDF -->
  <section id="summary" class="section hidden">
   <div class="panel no-print">
     <h2>Daily Consolidated Summary</h2>
@@ -429,7 +447,7 @@ async function deleteLogs(){
  alert("Selected activity records deleted."); await searchLogs();
 }
 
-/* --- تصدير الـ PDF --- */
+/* --- تصدير الـ PDF المعدل مع ضمان صفحة واحدة وحجم أرقام موحد --- */
 async function generatePdfReport(collectionName="orders", title="DAILY HOSPITAL ORDERS"){
  const date=$("summaryDate").value||tomorrow();
  const snap=await getDocs(query(collection(firestore,collectionName),where("date","==",date)));
@@ -446,11 +464,12 @@ async function generatePdfReport(collectionName="orders", title="DAILY HOSPITAL 
  const {jsPDF}=window.jspdf;
  const pdf=new jsPDF({orientation:"landscape",unit:"pt",format:"a4"});
  const pageWidth = pdf.internal.pageSize.getWidth();
+ const pageHeight = pdf.internal.pageSize.getHeight();
  
  pdf.setFont("helvetica","bold");
  pdf.setFontSize(11);
  const headerBg = collectionName==="returns" ? [184, 50, 50] : [26, 74, 110];
- pdf.text(`FONDANT CHOCO — ${title} | Date: ${date} | Hospitals: ${activeHospitals.length}`, pageWidth / 2, 18, {align:"center"});
+ pdf.text(`FONDANT CHOCO — ${title} | Date: ${date} | Hospitals: ${activeHospitals.length}`, pageWidth / 2, 20, {align:"center"});
  
  const head=[["Item",...activeHospitals,"Total"]];
  const body=activeItems.map(item=>{
@@ -462,28 +481,79 @@ async function generatePdfReport(collectionName="orders", title="DAILY HOSPITAL 
   return [item,...vals,sum?String(sum):""];
  });
 
- const availableWidth = pageWidth - 16;
- const col0Width = activeHospitals.length > 8 ? 140 : 180; 
+ // الهوامش: الجانبي 1.8 سم (51 pt) - السفلي 0.3 سم (8.5 pt)
+ const marginSide = 51;
+ const marginBottom = 8.5; 
+ const availableWidth = pageWidth - (marginSide * 2);
+ const col0Width = activeHospitals.length > 8 ? 140 : 170; 
  const totalColWidth = 45;
  const remainingWidth = availableWidth - col0Width - totalColWidth;
  const hospitalColWidth = remainingWidth / activeHospitals.length;
 
- const colStyles = { 0: { cellWidth: col0Width, halign: "left", fontStyle: "bold" }, [activeHospitals.length + 1]: { cellWidth: totalColWidth, fontStyle: "bold", fillColor: [229, 240, 251] } };
- activeHospitals.forEach((_, idx) => { colStyles[idx + 1] = { cellWidth: hospitalColWidth, halign: "center" }; });
+ // حساب ديناميكي لضمان الوقوع في صفحة واحدة دائماً (Single-Page Fitting)
+ const availableHeight = pageHeight - 30 - marginBottom;
+ const totalRows = activeItems.length;
+ // ضبط حجم الخط وتغليظ الأرقام لترتقي لحجم خط المجموع
+ const fontSizeCalc = Math.min(10.5, Math.max(7.5, (availableHeight - 40) / (totalRows * 1.8)));
+ const paddingCalc = totalRows > 22 ? 1.5 : (totalRows > 15 ? 2.5 : 3.5);
+
+ // لون خلفية متوسط للصفوف التبادلية
+ const altRowColor = collectionName === "returns" ? [248, 200, 200] : [176, 196, 222]; // لون متوسط وواضح
+
+ const colStyles = { 
+   0: { cellWidth: col0Width, halign: "left", fontStyle: "bold" }, 
+   [activeHospitals.length + 1]: { cellWidth: totalColWidth, fontStyle: "bold", fontSize: fontSizeCalc, fillColor: [229, 240, 251] } 
+ };
+ activeHospitals.forEach((_, idx) => { 
+   colStyles[idx + 1] = { cellWidth: hospitalColWidth, halign: "center", fontStyle: "bold", fontSize: fontSizeCalc }; 
+ });
 
  pdf.autoTable({
-  head, body, startY: 24, margin: { top: 18, left: 8, right: 8, bottom: 8 }, theme: "grid",
-  styles: { font: "helvetica", fontSize: activeHospitals.length < 8 ? 9.5 : 8.5, cellPadding: activeHospitals.length < 8 ? 3.5 : 2.5, halign: "center", valign: "middle", lineColor: [216, 226, 237], lineWidth: 0.25 },
-  headStyles: { fillColor: headerBg, textColor: 255, fontStyle: "bold", fontSize: 7.5, cellPadding: 1, minCellHeight: 55 },
-  columnStyles: colStyles, alternateRowStyles: { fillColor: [240, 245, 252] },
-  didParseCell: function(data) { if (data.section === 'head' && data.column.index > 0 && data.column.index <= activeHospitals.length) data.cell.styles.valign = 'bottom'; },
+  head, body, startY: 28, 
+  margin: { top: 28, left: marginSide, right: marginSide, bottom: marginBottom }, 
+  theme: "grid",
+  styles: { 
+    font: "helvetica", 
+    fontSize: fontSizeCalc, 
+    fontStyle: "bold", // أرقام عريضة ومطابقة للمجموع
+    cellPadding: paddingCalc, 
+    halign: "center", 
+    valign: "middle", 
+    lineColor: [51, 65, 85], 
+    lineWidth: 0.65 
+  },
+  headStyles: { 
+    fillColor: headerBg, 
+    textColor: 255, 
+    fontStyle: "bold", 
+    fontSize: 8, 
+    cellPadding: 1, 
+    minCellHeight: 35, // تصغير ارتفاع الهيدر وإلغاء الفراغ الزائد
+    lineColor: [15, 23, 42], 
+    lineWidth: 0.8 
+  },
+  columnStyles: colStyles, 
+  alternateRowStyles: { fillColor: altRowColor },
+  didParseCell: function(data) { 
+    if (data.section === 'head' && data.column.index > 0 && data.column.index <= activeHospitals.length) {
+      data.cell.styles.valign = 'bottom'; 
+    }
+  },
   customDrawCell: function(data) {
    if (data.section === 'head' && data.column.index > 0 && data.column.index <= activeHospitals.length) {
-    pdf.setFillColor(headerBg[0], headerBg[1], headerBg[2]); pdf.rect(data.cell.x, data.cell.y, data.cell.width, data.cell.height, 'F');
-    pdf.setDrawColor(216, 226, 237); pdf.setLineWidth(0.25); pdf.rect(data.cell.x, data.cell.y, data.cell.width, data.cell.height, 'S');
-    pdf.saveGraphicsState(); pdf.setTextColor(255, 255, 255); pdf.setFont("helvetica", "bold"); pdf.setFontSize(7.5);
-    const text = data.cell.text.join(' '); pdf.text(text, data.cell.x + (data.cell.width / 2) + 2, data.cell.y + data.cell.height - 3, { angle: 90 });
-    pdf.restoreGraphicsState(); return false;
+    pdf.setFillColor(headerBg[0], headerBg[1], headerBg[2]); 
+    pdf.rect(data.cell.x, data.cell.y, data.cell.width, data.cell.height, 'F');
+    pdf.setDrawColor(15, 23, 42); 
+    pdf.setLineWidth(0.8); 
+    pdf.rect(data.cell.x, data.cell.y, data.cell.width, data.cell.height, 'S');
+    pdf.saveGraphicsState(); 
+    pdf.setTextColor(255, 255, 255); 
+    pdf.setFont("helvetica", "bold"); 
+    pdf.setFontSize(7.5);
+    const text = data.cell.text.join(' '); 
+    pdf.text(text, data.cell.x + (data.cell.width / 2) + 2, data.cell.y + data.cell.height - 3, { angle: 90 });
+    pdf.restoreGraphicsState(); 
+    return false;
    }
   }
  });
@@ -492,7 +562,6 @@ async function generatePdfReport(collectionName="orders", title="DAILY HOSPITAL 
  const preview=window.open(url,"_blank"); if(!preview){alert("Please allow pop-ups to preview PDF.");}
  const a=document.createElement("a");a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();
 }
-
 function renderMaster(){
  $("hospitalManage").innerHTML=`<ul>${hospitals.map((h,i)=>`<li style="margin:7px 0">${safe(h)} <button class="secondary" data-del-h="${i}">Remove</button></li>`).join("")}</ul>`;
  $("itemManage").innerHTML=`<ul>${items.map((it,i)=>`<li style="margin:7px 0">${safe(it)} <button class="secondary" data-del-i="${i}">Remove</button></li>`).join("")}</ul>`;
@@ -593,8 +662,22 @@ $("saveReturn").onclick=()=>saveReturn().catch(e=>alert(e.message));
 $("loadReturn").onclick=()=>loadReturn().catch(e=>alert(e.message));
 $("clearReturnForm").onclick=()=>{ $("returnHospitalSearch").value = ""; if($("returnItemSearchInput")) $("returnItemSearchInput").value = ""; renderRows({}, "returnRows", "returnItemSearchInput"); };
 
-$("refreshSummary").onclick=()=>loadSummary("orders", "summaryContent", "Orders Summary", tomorrow()).catch(e=>alert(e.message));
-$("previewReturns").onclick=()=>loadSummary("returns", "summaryContent", "Returns Summary", todayLocal()).catch(e=>alert(e.message));
+// تحديث زر Load Orders Summary لجلب طلبات ومرتجعات التاريخ المحدد معاً
+$("refreshSummary").onclick=async()=>{
+  const selDate = $("summaryDate").value;
+  if(!selDate){alert("Please select a date.");return;}
+  try{
+    await loadSummary("orders", "summaryContent", "Orders Summary", selDate);
+  }catch(e){alert(e.message);}
+};
+
+$("previewReturns").onclick=async()=>{
+  const selDate = $("summaryDate").value;
+  if(!selDate){alert("Please select a date.");return;}
+  try{
+    await loadSummary("returns", "summaryContent", "Returns Summary", selDate);
+  }catch(e){alert(e.message);}
+};
 
 $("exportPdf").onclick=()=>generatePdfReport("orders", "DAILY HOSPITAL ORDERS").catch(e=>alert("PDF error: "+e.message));
 $("exportReturnsPdf").onclick=()=>generatePdfReport("returns", "DAILY HOSPITAL RETURNS").catch(e=>alert("PDF error: "+e.message));
