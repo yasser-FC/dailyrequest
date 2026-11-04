@@ -14,7 +14,10 @@ header img{width:58px;height:58px;object-fit:contain;border-radius:10px;backgrou
 .wrap{max-width:1178px;width:100%;margin:16px auto;padding:0 12px}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
 button,.tab{border:0;border-radius:9px;padding:11px 16px;background:var(--blue);color:#fff;font-weight:700;cursor:pointer}
 button.secondary,.tab{background:#fff;color:var(--navy);border:1px solid var(--line)}button.danger{background:var(--red)}button:disabled{opacity:.45;cursor:not-allowed}
-.tab.active{background:var(--navy);color:#fff}.panel{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:0 5px 20px #1a4a6e10;margin-bottom:16px}
+.tab.active{background:var(--navy);color:#fff}
+.tab.orders-tab{background:var(--green);color:#fff;}
+.tab.orders-tab.active{background:#0f5c3b;color:#fff;}
+.panel{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:0 5px 20px #1a4a6e10;margin-bottom:16px}
 h2{font-size:19px;margin:0 0 15px;color:var(--navy)}.row{display:flex;gap:12px;align-items:end;flex-wrap:wrap}.field{display:flex;flex-direction:column;gap:6px;min-width:150px;flex:1}
 .field.hospital-field{flex:2.2;min-width:240px}
 .field.date-field{flex:0.8;max-width:190px;min-width:140px}
@@ -58,12 +61,12 @@ footer{text-align:center;color:#64748b;font-size:12px;padding:18px}.signature-ca
 <header><img src="https://i.postimg.cc/WbJw6TdV/Orig-LOGO-Square.jpg" alt="Company logo"><div><h1>Fondant Choco</h1><p>Daily Hospital Orders & Returns Management</p></div></header>
 <div class="wrap">
  <div class="tabs no-print">
-  <button class="tab active" data-tab="orders">Hospital Orders</button>
-  <button class="tab returns-tab" data-tab="returns">Hospital Returns 🔄</button>
+  <button class="tab orders-tab active" data-tab="orders">Orders</button>
   <button class="tab" data-tab="summary">Daily Summary</button>
   <button class="tab" data-tab="history">Order History</button>
   <button class="tab" data-tab="activity">Activity Log</button>
   <button class="tab" data-tab="master">Master Data</button>
+  <button class="tab returns-tab" data-tab="returns">Wastage</button>
  </div>
 
  <!-- شاشة إدخال الطلبات -->
@@ -118,8 +121,8 @@ footer{text-align:center;color:#64748b;font-size:12px;padding:18px}.signature-ca
     <div class="row">
       <div class="field"><label>Select Date</label><input id="summaryDate" type="date"></div>
       <button id="refreshSummary">Load Orders Summary</button>
-      <button style="background:#b83232" id="previewReturns">Preview Returns 👁️</button>
       <button id="exportPdf">Download Orders PDF</button>
+      <button style="background:#b83232" id="previewReturns">Preview Returns 👁️</button>
       <button style="background:#b83232" id="exportReturnsPdf">Download Returns PDF 📄</button>
     </div>
   </div>
@@ -153,6 +156,19 @@ footer{text-align:center;color:#64748b;font-size:12px;padding:18px}.signature-ca
  </section>
  <footer>Fondant Choco · Daily Hospital Orders & Returns</footer>
 </div>
+
+<!-- رسالة التحذير عند الضغط على زر Wastage -->
+<div id="wastageModal" class="hidden" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:1000;">
+  <div style="background:white;padding:24px;border-radius:12px;max-width:400px;width:90%;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,0.3);">
+    <h3 style="color:#b83232;margin-top:0;">تنبيه هام</h3>
+    <p style="font-size:16px;color:#182230;margin:16px 0;">هذه الشاشة لتسجيل التوالف والمرتجعات فقط</p>
+    <div style="display:flex;gap:12px;justify-content:center;margin-top:20px;">
+      <button id="wastageAgree" style="background:#b83232;color:white;padding:10px 20px;border-radius:8px;border:0;font-weight:bold;cursor:pointer;">موافقة</button>
+      <button id="wastageReject" class="secondary" style="padding:10px 20px;border-radius:8px;cursor:pointer;">رفض</button>
+    </div>
+  </div>
+</div>
+
 <a class="signature-card" href="https://yasser-q8.github.io/myprofile/#" target="_blank" rel="noopener"><div>Yasser Elkhateeb</div><div class="sub">Program Developer · 67011143</div></a>
 
 <script type="module">
@@ -274,9 +290,8 @@ async function saveOrder(){
  if(!isEditable(date)){alert("This order is closed for editing.");return}
  
  const quantities={};
- document.querySelectorAll("#orderRows .qty").forEach(x=>{const v=x.value.trim();if(v!==""&&Number(v)!==0)quantities[x.dataset.item]=Number(v)});
+ document.querySelectorAll("#orderRows .qty").forEach(x=>{const v=x.value.trim();if(v!==""&&Number(v)!=0)quantities[x.dataset.item]=Number(v)});
  
- // التحقق التام: لا يسمح بحفظ الطلب إذا كان فارغاً
  if(Object.keys(quantities).length === 0){
    alert("⚠️ Cannot save an empty order!\nPlease enter at least one item quantity before saving.");
    return;
@@ -292,9 +307,8 @@ async function saveOrder(){
 /* --- إدارة المرتجعات (Returns) --- */
 async function loadReturn(){
  const hospital=selectedHospital(true),date=$("returnDate").value;
- if(!hospital){alert("Please select a hospital.");return}
+ if(!hospital){return}
  if(!isAllowedHospital(hospital)){
-   alert(`⚠️ Error: Hospital name "${hospital}" is not in the allowed list! Please pick a hospital from the list.`);
    return;
  }
  const snap=await getDoc(doc(firestore,"returns",docKey(date,hospital)));
@@ -311,9 +325,8 @@ async function saveReturn(){
  }
  
  const quantities={};
- document.querySelectorAll("#returnRows .qty").forEach(x=>{const v=x.value.trim();if(v!==""&&Number(v)!==0)quantities[x.dataset.item]=Number(v)});
+ document.querySelectorAll("#returnRows .qty").forEach(x=>{const v=x.value.trim();if(v!==""&&Number(v)!=0)quantities[x.dataset.item]=Number(v)});
  
- // التحقق التام: لا يسمح بحفظ المرتجع إذا كان فارغاً
  if(Object.keys(quantities).length === 0){
    alert("⚠️ Cannot save an empty return document!\nPlease enter at least one returned item quantity before saving.");
    return;
@@ -368,7 +381,13 @@ async function loadSummary(collectionName="orders", targetContainerId="summaryCo
 async function searchHistory(){
  const hosp=$("historyHospital").value.trim(),fromDate=$("historyFromDate").value,toDate=$("historyDate").value;
  let snaps=await getDocs(collection(firestore,"orders"));
- let rows=snaps.docs.map(d=>({id:d.id,...d.data()})).filter(o=>(!hosp||o.hospital===hosp)&&(!fromDate||o.date>=fromDate)&&(!toDate||o.date<=toDate)).sort((a,b)=>b.date.localeCompare(a.date));
+ let rows=snaps.docs.map(d=>({id:d.id,...d.data()})).filter(o=>{
+   const matchHosp = !hosp || (o.hospital && o.hospital.toLowerCase().includes(hosp.toLowerCase()));
+   const matchFrom = !fromDate || o.date >= fromDate;
+   const matchTo = !toDate || o.date <= toDate;
+   return matchHosp && matchFrom && matchTo;
+ }).sort((a,b)=>(b.date||"").localeCompare(a.date||""));
+
  $("historyResults").innerHTML=`<table><thead><tr><th style="width:38px"><input type="checkbox" id="selectAllOrdersCheck"></th><th>Date</th><th>Hospital</th><th>Items</th><th>Last Update</th><th>Action</th></tr></thead><tbody>${rows.map(o=>`<tr><td style="text-align:center"><input type="checkbox" class="order-check" value="${safe(o.id)}"></td><td>${safe(o.date)}</td><td>${safe(o.hospital)}</td><td>${Object.keys(o.quantities||{}).length}</td><td>${o.updatedAt?.toDate?o.updatedAt.toDate().toLocaleString():""}</td><td><button class="secondary" data-open="${safe(o.id)}">Open</button></td></tr>`).join("")}</tbody></table>`;
  const all=$("selectAllOrdersCheck");if(all)all.onchange=()=>document.querySelectorAll(".order-check").forEach(c=>c.checked=all.checked);
  $("historyResults").querySelectorAll("[data-open]").forEach(b=>b.onclick=async()=>{
@@ -500,11 +519,35 @@ function showTab(id){
  if(id==="history")searchHistory().catch(console.error);
 }
 
-document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
+// تعديل التبويبات مع رسالة زر Wastage
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{
+  const tabId = b.dataset.tab;
+  if(tabId === "returns"){
+    $("wastageModal").classList.remove("hidden");
+  } else {
+    showTab(tabId);
+  }
+});
+
+$("wastageAgree").onclick = () => {
+  $("wastageModal").classList.add("hidden");
+  showTab("orders");
+};
+$("wastageReject").onclick = () => {
+  $("wastageModal").classList.add("hidden");
+};
+
 $("hospitalSearch").addEventListener("input",()=>showSuggestions(false));
 $("hospitalSearch").addEventListener("focus",()=>showSuggestions(false));
 $("returnHospitalSearch").addEventListener("input",()=>showSuggestions(true));
 $("returnHospitalSearch").addEventListener("focus",()=>showSuggestions(true));
+
+// تحديث المرتجعات عند كتابة أو تغيير التاريخ
+$("returnDate").onchange = () => {
+  if($("returnHospitalSearch").value.trim()){
+    loadReturn().catch(e=>alert(e.message));
+  }
+};
 
 document.addEventListener("click",e=>{
   if(!e.target.closest(".autocomplete-wrap")){
