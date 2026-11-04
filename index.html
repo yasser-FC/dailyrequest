@@ -61,7 +61,7 @@ footer{text-align:center;color:#64748b;font-size:12px;padding:18px}.signature-ca
 <header><img src="https://i.postimg.cc/WbJw6TdV/Orig-LOGO-Square.jpg" alt="Company logo"><div><h1>Fondant Choco</h1><p>Daily Hospital  & Returns Management</p></div></header>
 <div class="wrap">
  <div class="tabs no-print">
-  <button class="tab -tab active" data-tab="">NEW Orders</button>
+  <button class="tab active" data-tab="orders">New Orders</button>
   <button class="tab" data-tab="summary">Daily Summary</button>
   <button class="tab" data-tab="history">Order History</button>
   <button class="tab" data-tab="activity">Activity Log</button>
@@ -160,13 +160,18 @@ footer{text-align:center;color:#64748b;font-size:12px;padding:18px}.signature-ca
 <!-- رسالة التحذير عند الضغط على زر Wastage -->
 <div id="wastageModal" class="hidden" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:1000;">
   <div style="background:white;padding:24px;border-radius:12px;max-width:400px;width:90%;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,0.3);">
-    <h3 style="color:#b83232;margin-top:0;">تنبيه هام</h3>
-    <p style="font-size:16px;color:#182230;margin:16px 0;">هذه الشاشة لتسجيل التوالف والمرتجعات فقط</p>
+    <h3 style="color:#b83232;margin-top:0;">Important Notice</h3>
+    <p style="font-size:16px;color:#182230;margin:16px 0;">This screen is dedicated to recording wastes and returns only.</p>
     <div style="display:flex;gap:12px;justify-content:center;margin-top:20px;">
-      <button id="wastageAgree" style="background:#b83232;color:white;padding:10px 20px;border-radius:8px;border:0;font-weight:bold;cursor:pointer;">موافقة</button>
-      <button id="wastageReject" class="secondary" style="padding:10px 20px;border-radius:8px;cursor:pointer;">رفض</button>
+      <button id="wastageAgree" style="background:#b83232;color:white;padding:10px 20px;border-radius:8px;border:0;font-weight:bold;cursor:pointer;">Confirm</button>
+      <button id="wastageReject" class="secondary" style="padding:10px 20px;border-radius:8px;cursor:pointer;">Cancel</button>
     </div>
   </div>
+</div>
+
+<!-- عنصر إشعار التحويل لمدة 3 ثوانٍ -->
+<div id="redirectToast" class="hidden" style="position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#1a4a6e;color:white;padding:12px 24px;border-radius:8px;font-weight:bold;box-shadow:0 5px 15px rgba(0,0,0,0.3);z-index:1100;font-size:14px;">
+  You have been redirected to the New Order page.
 </div>
 
 <a class="signature-card" href="https://yasser-q8.github.io/myprofile/#" target="_blank" rel="noopener"><div>Yasser Elkhateeb</div><div class="sub">Program Developer · 67011143</div></a>
@@ -519,7 +524,7 @@ function showTab(id){
  if(id==="history")searchHistory().catch(console.error);
 }
 
-// تعديل التبويبات مع رسالة زر Wastage
+// تعديل التبويبات مع رسالة زر Wastage والتحويل الشمولي
 document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{
   const tabId = b.dataset.tab;
   if(tabId === "returns"){
@@ -531,10 +536,17 @@ document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{
 
 $("wastageAgree").onclick = () => {
   $("wastageModal").classList.add("hidden");
-  showTab("orders");
+  showTab("returns");
 };
+
 $("wastageReject").onclick = () => {
   $("wastageModal").classList.add("hidden");
+  showTab("orders");
+  const toast = $("redirectToast");
+  toast.classList.remove("hidden");
+  setTimeout(() => {
+    toast.classList.add("hidden");
+  }, 3000);
 };
 
 $("hospitalSearch").addEventListener("input",()=>showSuggestions(false));
