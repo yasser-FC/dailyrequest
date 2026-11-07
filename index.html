@@ -371,8 +371,9 @@ async function loadSummary(collectionName="orders", targetContainerId="summaryCo
  const snap=await getDocs(query(collection(firestore,collectionName),where("date","==",date)));
  const data=snap.docs.map(d=>d.data()),allHosp=[...hospitals];
 
+ // الحفاظ على ترتيب المستشفيات الثابت تماماً كما ورد في الكود (Adan ثم Jahra...)
  const activeHospitals = collectionName==="returns" ? allHosp.filter(h => data.some(d => d.hospital === h && Object.values(d.quantities||{}).some(v=>Number(v)>0))) : allHosp;
- const activeItems = collectionName==="returns" ? items.filter(i => data.some(d => Number(d.quantities?.[i]||0) > 0)) : items;
+ const activeItems = items;
 
  if(collectionName==="returns" && (!activeHospitals.length || !activeItems.length)){
    $(targetContainerId).innerHTML=`<p class="muted" style="color:#b83232;font-weight:bold;">No returns recorded for ${date}.</p>`;
@@ -445,7 +446,8 @@ async function generatePdfReport(collectionName="orders", title="DAILY HOSPITAL 
  const snap=await getDocs(query(collection(firestore,collectionName),where("date","==",date)));
  const docsData=snap.docs.map(d=>d.data());
 
- const activeHospitals = hospitals.filter(h => docsData.some(d => d.hospital === h && Object.values(d.quantities||{}).some(v=>Number(v)>0)));
+ // الحفاظ على ترتيب المستشفيات والأصناف تماماً كما في الكود
+ const activeHospitals = hospitals;
  const activeItems = items;
 
  if(!activeHospitals.length || !activeItems.length){
@@ -566,7 +568,8 @@ function renderMaster(){
 
 async function addHospital(){
  const v=$("newHospital").value.trim();if(!v||hospitals.some(x=>x.toLowerCase()===v.toLowerCase()))return;
- hospitals.push(v);hospitals.sort(); await saveMaster("hospitals",hospitals); $("newHospital").value="";setOptions();renderMaster();
+ hospitals.push(v); // ملاحظة: تم إزالة الترتيب الأبجدي التلقائي للحفاظ على الترتيب اليدوي المخصص في الكود
+ await saveMaster("hospitals",hospitals); $("newHospital").value="";setOptions();renderMaster();
 }
 
 async function addItem(){
