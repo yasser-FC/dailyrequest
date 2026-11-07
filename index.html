@@ -313,7 +313,10 @@ async function saveOrder(){
 
  await setDoc(doc(firestore,"orders",docKey(date,hospital)),{hospital,date,quantities,updatedAt:serverTimestamp()},{merge:true});
  await logAction("Save Order",`Saved ${Object.keys(quantities).length} items`,hospital);
- alert("Order saved successfully.");
+ 
+ // الرسالة بالصيغة المطلوبة
+ alert("Hospitals Orders Says:\nOrder Saved Successfully");
+ 
  $("hospitalSearch").value = ""; if($("itemSearchInput")) $("itemSearchInput").value = "";
  renderRows(); status("Form cleared");
 }
@@ -437,15 +440,12 @@ async function deleteLogs(){
  alert("Selected activity records deleted."); await searchLogs();
 }
 
-/* --- دالة تصدير الـ PDF المعدلة لعرض جميع الأصناف حتى التي رصيدها صفر وحفظ الترتيب --- */
 async function generatePdfReport(collectionName="orders", title="DAILY HOSPITAL ORDERS"){
  const date=$("summaryDate").value||tomorrow();
  const snap=await getDocs(query(collection(firestore,collectionName),where("date","==",date)));
  const docsData=snap.docs.map(d=>d.data());
 
  const activeHospitals = hospitals.filter(h => docsData.some(d => d.hospital === h && Object.values(d.quantities||{}).some(v=>Number(v)>0)));
- 
- // استخدام جميع الأصناف مباشرة بنفس ترتيبها الأصلي في المصفوفة items (حتى التي رصيدها صفر)
  const activeItems = items;
 
  if(!activeHospitals.length || !activeItems.length){
